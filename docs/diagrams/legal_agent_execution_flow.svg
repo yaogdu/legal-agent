@@ -1,0 +1,185 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="1120" viewBox="0 0 1700 1120">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="55%" stop-color="#f4f8fb"/>
+      <stop offset="100%" stop-color="#f7fbff"/>
+    </linearGradient>
+    <linearGradient id="core" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#064e3b"/>
+      <stop offset="100%" stop-color="#0f766e"/>
+    </linearGradient>
+    <linearGradient id="agent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ecfdf5"/>
+      <stop offset="100%" stop-color="#eff6ff"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#0f172a" flood-opacity="0.10"/>
+    </filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#475569"/>
+    </marker>
+    <marker id="softArrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#94a3b8"/>
+    </marker>
+    <style>
+      .title{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-size:38px;font-weight:800;fill:#0f172a;letter-spacing:0}
+      .subtitle{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Arial,sans-serif;font-size:17px;fill:#64748b}
+      .section{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-size:18px;font-weight:800;fill:#0f172a}
+      .node-title{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-size:18px;font-weight:800;fill:#0f172a}
+      .node-cn{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Arial,sans-serif;font-size:13px;fill:#475569}
+      .small{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Arial,sans-serif;font-size:12px;fill:#64748b}
+      .tiny{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Arial,sans-serif;font-size:11px;fill:#64748b}
+      .pill{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-size:12px;font-weight:800;fill:#0f172a}
+      .white-title{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-size:21px;font-weight:800;fill:#ffffff}
+      .white-cn{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Arial,sans-serif;font-size:13px;fill:#d1fae5}
+      .box{fill:#ffffff;stroke:#d8e1ec;stroke-width:1.4;rx:20;filter:url(#shadow)}
+      .softbox{fill:url(#agent);stroke:#cbd5e1;stroke-width:1.2;rx:18}
+      .line{stroke:#475569;stroke-width:2.2;fill:none;marker-end:url(#arrow)}
+      .softline{stroke:#94a3b8;stroke-width:1.8;fill:none;marker-end:url(#softArrow);stroke-dasharray:5 7}
+      .plainline{stroke:#cbd5e1;stroke-width:1.7;fill:none}
+    </style>
+  </defs>
+
+  <rect width="1700" height="1120" fill="url(#bg)"/>
+
+  <text x="80" y="76" class="title">Legal Agent Execution Flow</text>
+  <text x="82" y="108" class="subtitle">法律 Agent 的有状态执行链路：Plan、Tool Use、Memory、Checkpoint、Review、Recovery</text>
+
+  <rect x="1160" y="48" width="460" height="72" rx="18" fill="#ffffff" stroke="#d8e1ec" filter="url(#shadow)"/>
+  <text x="1186" y="79" class="pill">Interview Message</text>
+  <text x="1186" y="103" class="small">不是一次 prompt，而是可恢复、可审计、可治理的 Agent Run</text>
+
+  <!-- Top ingress -->
+  <rect x="80" y="158" width="1540" height="132" rx="28" fill="#ffffff" stroke="#d8e1ec" filter="url(#shadow)"/>
+  <text x="112" y="199" class="section">Run Bootstrap</text>
+  <text x="112" y="223" class="small">请求接入后先创建 run，而不是直接调用模型</text>
+
+  <g transform="translate(385 190)">
+    <rect class="softbox" x="0" y="0" width="185" height="70"/>
+    <text x="26" y="30" class="node-title">User Request</text>
+    <text x="26" y="54" class="node-cn">案件问题 / 文书任务</text>
+  </g>
+  <path class="line" d="M570 225 L622 225"/>
+  <g transform="translate(630 190)">
+    <rect class="softbox" x="0" y="0" width="185" height="70"/>
+    <text x="26" y="30" class="node-title">Classify</text>
+    <text x="26" y="54" class="node-cn">场景 / 风险 / 权限</text>
+  </g>
+  <path class="line" d="M815 225 L867 225"/>
+  <g transform="translate(875 190)">
+    <rect class="softbox" x="0" y="0" width="185" height="70"/>
+    <text x="26" y="30" class="node-title">Create Run</text>
+    <text x="26" y="54" class="node-cn">run_id / tenant / SLA</text>
+  </g>
+  <path class="line" d="M1060 225 L1112 225"/>
+  <g transform="translate(1120 190)">
+    <rect class="softbox" x="0" y="0" width="185" height="70"/>
+    <text x="26" y="30" class="node-title">Enqueue</text>
+    <text x="26" y="54" class="node-cn">任务队列 / Worker</text>
+  </g>
+
+  <!-- Main execution area -->
+  <rect x="80" y="338" width="1540" height="522" rx="30" fill="#ffffff" stroke="#d8e1ec" filter="url(#shadow)"/>
+  <text x="112" y="380" class="section">Stateful Agent Loop</text>
+  <text x="112" y="404" class="small">每一步读写 Run State，并在关键节点 checkpoint，失败后从最近状态恢复</text>
+
+  <!-- central state -->
+  <rect x="656" y="438" width="385" height="260" rx="28" fill="url(#core)" stroke="#0f766e" filter="url(#shadow)"/>
+  <text x="704" y="486" class="white-title">Durable Run State</text>
+  <text x="704" y="516" class="white-cn">Agent 执行的事实源</text>
+  <g>
+    <rect x="704" y="545" width="130" height="34" rx="17" fill="#ffffff" fill-opacity="0.14" stroke="#a7f3d0"/>
+    <text x="728" y="567" class="white-cn">messages</text>
+    <rect x="852" y="545" width="130" height="34" rx="17" fill="#ffffff" fill-opacity="0.14" stroke="#a7f3d0"/>
+    <text x="891" y="567" class="white-cn">plan</text>
+    <rect x="704" y="591" width="130" height="34" rx="17" fill="#ffffff" fill-opacity="0.14" stroke="#a7f3d0"/>
+    <text x="734" y="613" class="white-cn">evidence</text>
+    <rect x="852" y="591" width="130" height="34" rx="17" fill="#ffffff" fill-opacity="0.14" stroke="#a7f3d0"/>
+    <text x="874" y="613" class="white-cn">tool results</text>
+    <rect x="704" y="637" width="130" height="34" rx="17" fill="#ffffff" fill-opacity="0.14" stroke="#a7f3d0"/>
+    <text x="724" y="659" class="white-cn">checkpoints</text>
+    <rect x="852" y="637" width="130" height="34" rx="17" fill="#ffffff" fill-opacity="0.14" stroke="#a7f3d0"/>
+    <text x="884" y="659" class="white-cn">status</text>
+  </g>
+
+  <!-- loop nodes -->
+  <g transform="translate(180 458)">
+    <rect class="softbox" x="0" y="0" width="190" height="86"/>
+    <text x="28" y="34" class="node-title">Plan Node</text>
+    <text x="28" y="59" class="node-cn">任务拆解 / 下一步</text>
+  </g>
+  <g transform="translate(180 614)">
+    <rect class="softbox" x="0" y="0" width="190" height="86"/>
+    <text x="28" y="34" class="node-title">Retrieve Node</text>
+    <text x="28" y="59" class="node-cn">法规 / 案例 / 模板</text>
+  </g>
+  <g transform="translate(420 720)">
+    <rect class="softbox" x="0" y="0" width="190" height="86"/>
+    <text x="28" y="34" class="node-title">Tool Node</text>
+    <text x="28" y="59" class="node-cn">MCP / Function Call</text>
+  </g>
+  <g transform="translate(1090 720)">
+    <rect class="softbox" x="0" y="0" width="190" height="86"/>
+    <text x="28" y="34" class="node-title">Draft Node</text>
+    <text x="28" y="59" class="node-cn">生成法律草稿</text>
+  </g>
+  <g transform="translate(1330 614)">
+    <rect class="softbox" x="0" y="0" width="190" height="86"/>
+    <text x="28" y="34" class="node-title">Review Node</text>
+    <text x="28" y="59" class="node-cn">事实 / 引用 / 风险</text>
+  </g>
+  <g transform="translate(1330 458)">
+    <rect class="softbox" x="0" y="0" width="190" height="86"/>
+    <text x="28" y="34" class="node-title">Decision</text>
+    <text x="28" y="59" class="node-cn">继续 / 审批 / 输出</text>
+  </g>
+
+  <path class="line" d="M370 501 C470 500, 535 500, 650 520"/>
+  <path class="line" d="M370 657 C470 650, 535 625, 650 598"/>
+  <path class="line" d="M610 763 C650 735, 675 716, 700 700"/>
+  <path class="line" d="M1040 700 C1072 718, 1088 737, 1090 763"/>
+  <path class="line" d="M1280 763 C1320 735, 1342 708, 1362 700"/>
+  <path class="line" d="M1425 614 L1425 552"/>
+  <path class="softline" d="M1330 501 C1220 472, 1135 470, 1044 520"/>
+  <path class="softline" d="M1425 458 C1420 392, 310 392, 275 458"/>
+
+  <!-- side systems -->
+  <rect x="80" y="900" width="1540" height="156" rx="28" fill="#ffffff" stroke="#d8e1ec" filter="url(#shadow)"/>
+  <text x="112" y="940" class="section">Execution Controls</text>
+  <text x="112" y="964" class="small">这些能力决定 Agent 能不能生产化上线</text>
+
+  <g transform="translate(250 982)">
+    <rect x="0" y="0" width="180" height="48" rx="16" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="29" y="30" class="pill">Checkpoint</text>
+    <text x="112" y="30" class="small">状态快照</text>
+  </g>
+  <g transform="translate(470 982)">
+    <rect x="0" y="0" width="180" height="48" rx="16" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="29" y="30" class="pill">Retry</text>
+    <text x="88" y="30" class="small">幂等重试</text>
+  </g>
+  <g transform="translate(690 982)">
+    <rect x="0" y="0" width="180" height="48" rx="16" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="29" y="30" class="pill">Approval</text>
+    <text x="115" y="30" class="small">人工审批</text>
+  </g>
+  <g transform="translate(910 982)">
+    <rect x="0" y="0" width="180" height="48" rx="16" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="29" y="30" class="pill">Audit</text>
+    <text x="89" y="30" class="small">审计回放</text>
+  </g>
+  <g transform="translate(1130 982)">
+    <rect x="0" y="0" width="180" height="48" rx="16" fill="#f8fafc" stroke="#cbd5e1"/>
+    <text x="29" y="30" class="pill">Eval</text>
+    <text x="78" y="30" class="small">质量评测</text>
+  </g>
+
+  <!-- right detail rail -->
+  <rect x="1204" y="338" width="1" height="522" fill="#e2e8f0"/>
+  <rect x="112" y="424" width="1" height="342" fill="#e2e8f0" opacity="0"/>
+
+  <rect x="1096" y="358" width="450" height="52" rx="18" fill="#fefce8" stroke="#fde68a"/>
+  <text x="1120" y="390" class="pill">Legal risk gates</text>
+  <text x="1240" y="390" class="small">引用缺失 / 高风险建议 / 越权工具调用 -> 审批或拒绝</text>
+</svg>

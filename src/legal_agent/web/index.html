@@ -1,0 +1,1613 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Legal Agent Console</title>
+    <style>
+      :root {
+        --bg: #f6f8fb;
+        --panel: #ffffff;
+        --panel-soft: #f9fbfd;
+        --text: #172033;
+        --muted: #64748b;
+        --line: #dbe4ee;
+        --line-strong: #c4d1df;
+        --blue: #2563eb;
+        --blue-dark: #1d4ed8;
+        --green: #047857;
+        --green-bg: #dff8ec;
+        --amber: #b45309;
+        --amber-bg: #fff3d2;
+        --red: #b42318;
+        --red-bg: #fee4e2;
+        --slate: #334155;
+        --shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          "PingFang SC", "Microsoft YaHei", sans-serif;
+      }
+
+      a {
+        color: var(--blue);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      button,
+      input,
+      textarea,
+      select {
+        font: inherit;
+      }
+
+      button {
+        border: 1px solid var(--line-strong);
+        border-radius: 6px;
+        background: #fff;
+        color: var(--slate);
+        min-height: 36px;
+        padding: 0 12px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        border-color: #94a3b8;
+        background: #f8fafc;
+      }
+
+      button.primary {
+        border-color: var(--blue);
+        background: var(--blue);
+        color: #fff;
+      }
+
+      button.primary:hover {
+        border-color: var(--blue-dark);
+        background: var(--blue-dark);
+      }
+
+      button.danger {
+        border-color: #fecaca;
+        color: var(--red);
+      }
+
+      button:disabled {
+        cursor: not-allowed;
+        opacity: 0.55;
+      }
+
+      input,
+      textarea,
+      select {
+        width: 100%;
+        border: 1px solid var(--line-strong);
+        border-radius: 6px;
+        background: #fff;
+        color: var(--text);
+        padding: 9px 10px;
+      }
+
+      textarea {
+        min-height: 126px;
+        resize: vertical;
+        line-height: 1.55;
+      }
+
+      label {
+        display: grid;
+        gap: 6px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 650;
+      }
+
+      code,
+      pre {
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      }
+
+      .app-shell {
+        min-height: 100vh;
+        display: grid;
+        grid-template-rows: auto 1fr;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        height: 64px;
+        padding: 0 26px;
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.88);
+        backdrop-filter: blur(10px);
+        position: sticky;
+        top: 0;
+        z-index: 4;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 230px;
+      }
+
+      .brand-mark {
+        width: 34px;
+        height: 34px;
+        border-radius: 7px;
+        display: grid;
+        place-items: center;
+        background: #11243d;
+        color: #fff;
+        font-weight: 800;
+      }
+
+      .brand-title {
+        display: grid;
+        gap: 1px;
+      }
+
+      .brand-title strong {
+        font-size: 15px;
+      }
+
+      .brand-title span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .top-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: #94a3b8;
+      }
+
+      .status-dot.ok {
+        background: #10b981;
+      }
+
+      .status-dot.bad {
+        background: #ef4444;
+      }
+
+      .workspace {
+        display: grid;
+        grid-template-columns: minmax(300px, 390px) 1fr;
+        gap: 18px;
+        padding: 18px;
+        align-items: start;
+      }
+
+      .sidebar,
+      .main {
+        display: grid;
+        gap: 14px;
+      }
+
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+      }
+
+      .panel-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 14px 16px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .panel-title {
+        display: grid;
+        gap: 2px;
+      }
+
+      .panel-title h2 {
+        margin: 0;
+        font-size: 15px;
+        line-height: 1.2;
+      }
+
+      .panel-title span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .panel-body {
+        padding: 16px;
+      }
+
+      .form-grid {
+        display: grid;
+        gap: 12px;
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .inline {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .check-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--text);
+        font-size: 13px;
+        font-weight: 600;
+      }
+
+      .check-label input {
+        width: auto;
+      }
+
+      .runs {
+        display: grid;
+        gap: 8px;
+        max-height: calc(100vh - 500px);
+        min-height: 220px;
+        overflow: auto;
+      }
+
+      .run-item {
+        display: grid;
+        gap: 8px;
+        width: 100%;
+        text-align: left;
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        padding: 10px;
+        background: #fff;
+      }
+
+      .run-item.active {
+        border-color: var(--blue);
+        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12);
+      }
+
+      .run-item-main {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .run-id {
+        color: var(--text);
+        font-size: 13px;
+        font-weight: 750;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .run-meta {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 24px;
+        border-radius: 999px;
+        padding: 2px 9px;
+        background: #eef2f7;
+        color: var(--slate);
+        font-size: 12px;
+        font-weight: 750;
+        white-space: nowrap;
+      }
+
+      .badge.RUNNING,
+      .badge.CREATED {
+        background: #dbeafe;
+        color: #1e40af;
+      }
+
+      .badge.COMPLETED {
+        background: var(--green-bg);
+        color: var(--green);
+      }
+
+      .badge.WAITING_USER_INPUT,
+      .badge.WAITING_APPROVAL {
+        background: var(--amber-bg);
+        color: var(--amber);
+      }
+
+      .badge.FAILED,
+      .badge.CANCELLED,
+      .badge.EXPIRED,
+      .badge.APPROVAL_REJECTED {
+        background: var(--red-bg);
+        color: var(--red);
+      }
+
+      .next-action {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 14px;
+        border: 1px solid #bfdbfe;
+        border-left: 4px solid var(--blue);
+        border-radius: 8px;
+        background: #eff6ff;
+        padding: 13px 14px;
+      }
+
+      .next-action.wait {
+        border-color: #fed7aa;
+        border-left-color: var(--amber);
+        background: #fff7ed;
+      }
+
+      .next-action.done {
+        border-color: #bbf7d0;
+        border-left-color: var(--green);
+        background: #f0fdf4;
+      }
+
+      .next-action.blocked {
+        border-color: #fecaca;
+        border-left-color: var(--red);
+        background: #fff1f2;
+      }
+
+      .next-action strong {
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .next-action span {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .metric {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel-soft);
+        padding: 12px;
+        min-height: 78px;
+      }
+
+      .metric span {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        margin-bottom: 8px;
+      }
+
+      .metric strong {
+        display: block;
+        font-size: 18px;
+        line-height: 1.2;
+        word-break: break-word;
+      }
+
+      .flow {
+        display: grid;
+        grid-template-columns: repeat(10, minmax(70px, 1fr));
+        gap: 8px;
+        overflow-x: auto;
+        padding-bottom: 2px;
+      }
+
+      .step {
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        background: #fff;
+        padding: 9px 8px;
+        min-height: 58px;
+        display: grid;
+        align-content: center;
+        gap: 4px;
+        text-align: center;
+      }
+
+      .step.active {
+        border-color: var(--blue);
+        background: #eff6ff;
+      }
+
+      .step.done {
+        border-color: #bbf7d0;
+        background: #f0fdf4;
+      }
+
+      .step strong {
+        font-size: 12px;
+      }
+
+      .step span {
+        color: var(--muted);
+        font-size: 11px;
+      }
+
+      .tabs {
+        display: flex;
+        gap: 6px;
+        border-bottom: 1px solid var(--line);
+        padding: 0 16px;
+      }
+
+      .tab {
+        border: 0;
+        border-bottom: 2px solid transparent;
+        border-radius: 0;
+        background: transparent;
+        min-height: 44px;
+        padding: 0 10px;
+        color: var(--muted);
+        font-weight: 750;
+      }
+
+      .tab.active {
+        color: var(--blue);
+        border-bottom-color: var(--blue);
+      }
+
+      .tab-panel {
+        display: none;
+      }
+
+      .tab-panel.active {
+        display: block;
+      }
+
+      .question-list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .question-item {
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        background: var(--panel-soft);
+        padding: 11px;
+      }
+
+      .question-item strong {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 13px;
+      }
+
+      .question-item span {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .facts-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .full-span {
+        grid-column: 1 / -1;
+      }
+
+      .doc-list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .approval-stack {
+        display: grid;
+        gap: 12px;
+      }
+
+      .doc-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        padding: 10px 12px;
+        background: var(--panel-soft);
+      }
+
+      .doc-main {
+        display: grid;
+        gap: 3px;
+        min-width: 0;
+      }
+
+      .doc-main strong {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .doc-main span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .draft-preview {
+        display: grid;
+        gap: 12px;
+      }
+
+      .draft-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .draft-meta {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .draft-meta div {
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        background: var(--panel-soft);
+        padding: 10px;
+      }
+
+      .draft-meta span {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        margin-bottom: 4px;
+      }
+
+      .draft-meta strong {
+        display: block;
+        font-size: 14px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .draft-warning {
+        border: 1px solid #fed7aa;
+        border-left: 4px solid var(--amber);
+        border-radius: 8px;
+        background: #fff7ed;
+        color: var(--amber);
+        padding: 11px 12px;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .preview {
+        max-height: 520px;
+        overflow: auto;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        padding: 16px;
+        white-space: pre-wrap;
+        line-height: 1.65;
+      }
+
+      .json {
+        max-height: 420px;
+        overflow: auto;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #101827;
+        color: #dbeafe;
+        padding: 14px;
+        font-size: 12px;
+        line-height: 1.55;
+      }
+
+      .empty {
+        border: 1px dashed var(--line-strong);
+        border-radius: 8px;
+        background: var(--panel-soft);
+        color: var(--muted);
+        padding: 18px;
+        text-align: center;
+      }
+
+      .toast {
+        position: fixed;
+        right: 18px;
+        bottom: 18px;
+        z-index: 10;
+        display: grid;
+        gap: 8px;
+        width: min(420px, calc(100vw - 36px));
+      }
+
+      .toast-item {
+        border: 1px solid var(--line);
+        border-left: 4px solid var(--blue);
+        border-radius: 8px;
+        background: #fff;
+        box-shadow: var(--shadow);
+        padding: 12px;
+        color: var(--text);
+      }
+
+      .toast-item.error {
+        border-left-color: var(--red);
+      }
+
+      .toast-item.success {
+        border-left-color: var(--green);
+      }
+
+      .muted {
+        color: var(--muted);
+      }
+
+      .small {
+        font-size: 12px;
+      }
+
+      .mono {
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      @media (max-width: 1120px) {
+        .workspace {
+          grid-template-columns: 1fr;
+        }
+
+        .runs {
+          max-height: 320px;
+        }
+
+        .summary-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 720px) {
+        .topbar {
+          height: auto;
+          align-items: flex-start;
+          flex-direction: column;
+          padding: 14px 16px;
+        }
+
+        .workspace {
+          padding: 12px;
+          gap: 12px;
+        }
+
+        .form-row,
+        .facts-grid,
+        .draft-meta,
+        .summary-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .panel-body {
+          padding: 12px;
+        }
+
+        .tabs {
+          overflow-x: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark">LA</div>
+          <div class="brand-title">
+            <strong>Legal Agent Console</strong>
+            <span>Labor dispute workflow</span>
+          </div>
+        </div>
+        <div class="top-actions">
+          <span class="inline small muted"><span id="healthDot" class="status-dot"></span><span id="healthText">checking</span></span>
+          <a href="/docs" target="_blank" rel="noreferrer">API Docs</a>
+          <a href="http://localhost:28088" target="_blank" rel="noreferrer">Temporal</a>
+          <a href="http://localhost:3001" target="_blank" rel="noreferrer">Langfuse</a>
+          <button id="refreshBtn" type="button">Refresh</button>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <aside class="sidebar">
+          <section class="panel">
+            <div class="panel-head">
+              <div class="panel-title">
+                <h2>New Run</h2>
+                <span>Create a Temporal-backed agent run</span>
+              </div>
+            </div>
+            <div class="panel-body">
+              <form id="createForm" class="form-grid">
+                <label>
+                  Case text
+                  <textarea id="caseText">我被公司无故辞退，公司只同意给 N+1，我的诉求是 2N；公司还没发年终奖，我还要主张加班费和未休年假补偿。有工资流水、微信聊天记录和考勤记录，帮我生成劳动仲裁申请书。</textarea>
+                </label>
+                <div class="form-row">
+                  <label>
+                    Task
+                    <select id="taskType">
+                      <option value="document_generation">document_generation</option>
+                      <option value="case_search">case_search</option>
+                      <option value="case_analysis">case_analysis</option>
+                    </select>
+                  </label>
+                  <label>
+                    Jurisdiction
+                    <select id="jurisdiction">
+                      <option value="CN-BJ">CN-BJ</option>
+                      <option value="CN">CN</option>
+                    </select>
+                  </label>
+                </div>
+                <label>
+                  Upload evidence
+                  <input id="fileInput" type="file" multiple accept=".txt,.md,.docx,text/plain,text/markdown,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+                </label>
+                <div class="inline">
+                  <label class="check-label"><input id="requireReview" type="checkbox" checked /> Human approval</label>
+                  <button class="primary" id="createBtn" type="submit">Start Run</button>
+                </div>
+              </form>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <div class="panel-title">
+                <h2>Recent Runs</h2>
+                <span>Latest Postgres projection</span>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div id="runsList" class="runs"></div>
+            </div>
+          </section>
+        </aside>
+
+        <section class="main">
+          <section class="panel">
+            <div class="panel-head">
+              <div class="panel-title">
+                <h2>Run Status</h2>
+                <span id="selectedRunLabel">No run selected</span>
+              </div>
+              <div class="inline">
+                <button id="cancelBtn" class="danger" type="button" disabled>Cancel</button>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div id="nextAction" class="next-action wait">
+                <div>
+                  <strong>Start a run</strong>
+                  <span>先在左侧输入一段案情。Agent 返回缺失信息后，再按问题补充。</span>
+                </div>
+              </div>
+              <div style="height: 14px"></div>
+              <div class="summary-grid">
+                <div class="metric">
+                  <span>Status</span>
+                  <strong id="statusMetric">-</strong>
+                </div>
+                <div class="metric">
+                  <span>Current Node</span>
+                  <strong id="nodeMetric">-</strong>
+                </div>
+                <div class="metric">
+                  <span>Progress</span>
+                  <strong id="progressMetric">0%</strong>
+                </div>
+                <div class="metric">
+                  <span>Updated</span>
+                  <strong id="updatedMetric">-</strong>
+                </div>
+              </div>
+              <div style="height: 14px"></div>
+              <div id="flow" class="flow"></div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="tabs">
+              <button class="tab active" type="button" data-tab="facts">Facts</button>
+              <button class="tab" type="button" data-tab="approval">Approval</button>
+              <button class="tab" type="button" data-tab="documents">Documents</button>
+              <button class="tab" type="button" data-tab="audit">Audit</button>
+            </div>
+
+            <div id="tab-facts" class="tab-panel active">
+              <div class="panel-body">
+                <div id="questions" class="question-list"></div>
+                <div style="height: 14px"></div>
+                <form id="factsForm" class="form-grid hidden">
+                  <div id="dynamicFacts" class="facts-grid"></div>
+                  <div class="inline full-span">
+                    <button class="primary" id="submitFactsBtn" type="submit" disabled>Submit Answers</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <div id="tab-approval" class="tab-panel">
+              <div class="panel-body">
+                <div class="approval-stack">
+                  <div id="draftPreviewBox"></div>
+                  <div id="approvalBox"></div>
+                </div>
+              </div>
+            </div>
+
+            <div id="tab-documents" class="tab-panel">
+              <div class="panel-body">
+                <div id="documentsBox" class="doc-list"></div>
+                <div style="height: 12px"></div>
+                <pre id="documentPreview" class="preview hidden"></pre>
+              </div>
+            </div>
+
+            <div id="tab-audit" class="tab-panel">
+              <div class="panel-body">
+                <div class="inline">
+                  <button id="loadAuditBtn" type="button" disabled>Load Audit</button>
+                  <button id="loadReplayBtn" type="button" disabled>Load Replay</button>
+                </div>
+                <div style="height: 12px"></div>
+                <pre id="auditBox" class="json">{}</pre>
+              </div>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+      const state = {
+        selectedRunId: localStorage.getItem("legal-agent:selected-run") || "",
+        pollTimer: null,
+        currentRun: null,
+        factsSignature: "",
+        draftFacts: {},
+      };
+
+      const steps = [
+        "CLASSIFY",
+        "FACT_CHECK",
+        "ASK_USER",
+        "PLAN",
+        "RETRIEVE",
+        "TOOL",
+        "DRAFT",
+        "REVIEW",
+        "APPROVAL",
+        "OUTPUT",
+      ];
+
+      const terminalStatuses = new Set(["COMPLETED", "FAILED", "CANCELLED", "EXPIRED", "APPROVAL_REJECTED"]);
+
+      const factFields = {
+        applicant_name: { label: "申请人姓名", placeholder: "张三" },
+        company_name: { label: "被申请人公司名称", placeholder: "北京某某科技有限公司" },
+        work_start_date: { label: "入职时间", input: "date" },
+        work_end_date: { label: "离职/劳动关系结束时间", input: "date" },
+        monthly_salary: { label: "月工资金额", input: "number", placeholder: "15000" },
+        daily_wage: { label: "日工资标准", input: "number", placeholder: "689.66" },
+        unpaid_months: { label: "拖欠工资月份", input: "number", placeholder: "2" },
+        contract_signed: { label: "是否签署劳动合同", input: "boolean" },
+        social_insurance_paid: { label: "是否缴纳社保", input: "boolean" },
+        termination_reason: { label: "解除劳动关系原因", placeholder: "公司无故辞退，未出具合法解除理由" },
+        company_offer: { label: "公司补偿方案", placeholder: "N+1" },
+        requested_termination_compensation: { label: "解除赔偿诉求", placeholder: "2N" },
+        termination_notice: { label: "解除通知情况", input: "longtext", placeholder: "是否收到解除通知、日期、通知理由、通知形式" },
+        year_end_bonus_amount: { label: "年终奖金额/算法", placeholder: "30000 或 按年度绩效 2 个月工资" },
+        year_end_bonus_basis: { label: "年终奖依据", input: "longtext", placeholder: "劳动合同、offer、员工手册、历史发放、聊天承诺" },
+        year_end_bonus_paid: { label: "年终奖发放情况", placeholder: "未发；公司称离职员工不发" },
+        overtime_hours: { label: "工作日延时加班小时数", input: "number", placeholder: "120" },
+        rest_day_overtime_hours: { label: "休息日加班小时数", input: "number", placeholder: "40" },
+        statutory_holiday_overtime_hours: { label: "法定节假日加班小时数", input: "number", placeholder: "8" },
+        overtime_period: { label: "加班期间", placeholder: "2024-01 至 2024-12" },
+        overtime_approval: { label: "加班审批/安排证据", input: "longtext", placeholder: "考勤记录、排班、聊天通知、加班审批、工作成果记录" },
+        annual_leave_entitlement_days: { label: "应休年假天数", input: "number", placeholder: "5" },
+        annual_leave_taken_days: { label: "已休年假天数", input: "number", placeholder: "0" },
+        evidence_available: { label: "已有证据材料", input: "list", placeholder: "工资流水, 微信聊天记录, 考勤记录" },
+        expected_claims: { label: "期望主张的仲裁请求", input: "list", placeholder: "2N违法解除赔偿, 年终奖, 加班费, 未休年假补偿" },
+      };
+
+      const $ = (selector) => document.querySelector(selector);
+      const $$ = (selector) => Array.from(document.querySelectorAll(selector));
+
+      function escapeHtml(value) {
+        return String(value ?? "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      function idempotency(prefix) {
+        return `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+      }
+
+      async function api(path, options = {}) {
+        const response = await fetch(path, {
+          ...options,
+          headers: {
+            ...(options.body instanceof FormData ? {} : { "content-type": "application/json" }),
+            ...(options.headers || {}),
+          },
+        });
+        const contentType = response.headers.get("content-type") || "";
+        const data = contentType.includes("application/json") ? await response.json() : await response.text();
+        if (!response.ok) {
+          const message = typeof data === "string" ? data : data.detail || JSON.stringify(data);
+          throw new Error(message);
+        }
+        return data;
+      }
+
+      function toast(message, type = "info") {
+        const box = document.createElement("div");
+        box.className = `toast-item ${type}`;
+        box.textContent = message;
+        $("#toast").appendChild(box);
+        window.setTimeout(() => box.remove(), 4200);
+      }
+
+      function fmtDate(value) {
+        if (!value) return "-";
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return String(value);
+        return date.toLocaleString();
+      }
+
+      function shortId(value) {
+        if (!value) return "-";
+        return value.length > 18 ? `${value.slice(0, 10)}...${value.slice(-6)}` : value;
+      }
+
+      function setLoading(button, loading, label) {
+        if (!button) return;
+        if (loading) {
+          button.dataset.originalText = button.textContent;
+          button.textContent = label || "Working";
+          button.disabled = true;
+        } else {
+          button.textContent = button.dataset.originalText || button.textContent;
+          button.disabled = false;
+        }
+      }
+
+      async function checkHealth() {
+        try {
+          const health = await api("/healthz/details");
+          $("#healthDot").className = `status-dot ${health.status === "ok" ? "ok" : "bad"}`;
+          $("#healthText").textContent = `health ${health.status}`;
+        } catch (error) {
+          $("#healthDot").className = "status-dot bad";
+          $("#healthText").textContent = "health failed";
+        }
+      }
+
+      async function loadRuns() {
+        const data = await api("/api/v1/legal-agent/runs?limit=30");
+        renderRuns(data.runs || []);
+        if (!state.selectedRunId && data.runs && data.runs[0]) {
+          selectRun(data.runs[0].run_id);
+        }
+      }
+
+      function renderRuns(runs) {
+        const box = $("#runsList");
+        if (!runs.length) {
+          box.innerHTML = '<div class="empty">No runs yet</div>';
+          return;
+        }
+        box.innerHTML = "";
+        for (const run of runs) {
+          const item = document.createElement("button");
+          item.type = "button";
+          item.className = `run-item ${run.run_id === state.selectedRunId ? "active" : ""}`;
+          item.innerHTML = `
+            <div class="run-item-main">
+              <span class="run-id mono">${run.run_id}</span>
+              <span class="badge ${run.run_status}">${run.run_status}</span>
+            </div>
+            <div class="run-meta">${run.current_node || "-"} · ${fmtDate(run.updated_at || run.created_at)}</div>
+          `;
+          item.addEventListener("click", () => selectRun(run.run_id));
+          box.appendChild(item);
+        }
+      }
+
+      async function selectRun(runId) {
+        if (runId !== state.selectedRunId) {
+          state.factsSignature = "";
+          state.draftFacts = {};
+        }
+        state.selectedRunId = runId;
+        localStorage.setItem("legal-agent:selected-run", runId);
+        await refreshSelectedRun();
+        await loadRuns().catch(() => {});
+        startPolling();
+      }
+
+      async function refreshSelectedRun() {
+        if (!state.selectedRunId) {
+          renderNoRun();
+          return;
+        }
+        const run = await api(`/api/v1/legal-agent/runs/${state.selectedRunId}`);
+        state.currentRun = run;
+        renderStatus(run);
+        renderQuestions(run);
+        renderActionButtons(run);
+        await Promise.allSettled([loadDraft(), loadApprovals(), loadDocuments()]);
+      }
+
+      function renderNoRun() {
+        $("#selectedRunLabel").textContent = "No run selected";
+        $("#statusMetric").textContent = "-";
+        $("#nodeMetric").textContent = "-";
+        $("#progressMetric").textContent = "0%";
+        $("#updatedMetric").textContent = "-";
+        $("#flow").innerHTML = "";
+        $("#questions").innerHTML = '<div class="empty">Create or select a run first</div>';
+        $("#draftPreviewBox").innerHTML = '<div class="empty">No run selected</div>';
+        $("#approvalBox").innerHTML = '<div class="empty">No run selected</div>';
+        $("#documentsBox").innerHTML = '<div class="empty">No run selected</div>';
+      }
+
+      function renderStatus(run) {
+        $("#selectedRunLabel").textContent = run.run_id;
+        $("#statusMetric").innerHTML = `<span class="badge ${run.run_status}">${run.run_status}</span>`;
+        $("#nodeMetric").textContent = run.current_node || "-";
+        $("#progressMetric").textContent = `${run.progress || 0}%`;
+        $("#updatedMetric").textContent = fmtDate(run.updated_at);
+        renderNextAction(run);
+        renderFlow(run.current_node, run.run_status);
+      }
+
+      function renderNextAction(run) {
+        const action = nextActionFor(run);
+        $("#nextAction").className = `next-action ${action.kind}`;
+        $("#nextAction").innerHTML = `<div><strong>${escapeHtml(action.title)}</strong><span>${escapeHtml(action.body)}</span></div>`;
+      }
+
+      function nextActionFor(run) {
+        if (!run || !run.run_id) {
+          return { kind: "wait", title: "Start a run", body: "先在左侧输入一段案情。Agent 返回缺失信息后，再按问题补充。" };
+        }
+        if (run.requires_user_input || run.run_status === "WAITING_USER_INPUT") {
+          return { kind: "wait", title: "Need your input", body: "切到 Facts 页，按 Agent 返回的问题补充事实，然后提交答案。" };
+        }
+        if (run.requires_approval || run.run_status === "WAITING_APPROVAL") {
+          return { kind: "wait", title: "Need approval", body: "切到 Approval 页，查看待审批请求，确认后点击 Approve 或 Deny。" };
+        }
+        if (run.run_status === "COMPLETED") {
+          return { kind: "done", title: "Completed", body: "切到 Documents 页预览或下载生成的文书，也可以在 Audit 页看执行记录。" };
+        }
+        if (["FAILED", "CANCELLED", "EXPIRED", "APPROVAL_REJECTED"].includes(run.run_status)) {
+          return { kind: "blocked", title: run.run_status, body: run.last_error || "这个 run 已结束，不能继续操作。可以新建一个 run。" };
+        }
+        const node = run.current_node || "workflow";
+        return { kind: "wait", title: "System is working", body: `${node} 阶段由 worker 自动执行，不需要你操作。页面会自动刷新，等缺事实、待审批或文档生成完成。` };
+      }
+
+      function renderFlow(currentNode, status) {
+        const currentIndex = steps.indexOf(currentNode);
+        $("#flow").innerHTML = steps
+          .map((step, index) => {
+            const done = status === "COMPLETED" || (currentIndex > index && currentIndex >= 0);
+            const active = currentNode === step && status !== "COMPLETED";
+            return `<div class="step ${done ? "done" : ""} ${active ? "active" : ""}">
+              <strong>${step}</strong>
+              <span>${done ? "done" : active ? "active" : "pending"}</span>
+            </div>`;
+          })
+          .join("");
+      }
+
+      function renderQuestions(run) {
+        const missing = run.missing_fields || [];
+        const questions = run.questions || [];
+        if (!state.selectedRunId) {
+          $("#questions").innerHTML = '<div class="empty">先提交一段案情，Agent 返回需要补充的问题后，这里会出现补充项。</div>';
+          hideFactsForm();
+          return;
+        }
+        if (!missing.length) {
+          const message = terminalStatuses.has(run.run_status)
+            ? "本次 run 没有待补充事实。"
+            : "Agent 正在处理，当前没有要求你补充事实。";
+          $("#questions").innerHTML = `<div class="empty">${message}</div>`;
+          hideFactsForm();
+          return;
+        }
+        $("#questions").innerHTML = missing
+          .map((field, index) => `<div class="question-item"><strong>${escapeHtml(field)}</strong><span>${escapeHtml(questions[index] || "请补充该事实。")}</span></div>`)
+          .join("");
+        renderFactsForm(missing, questions);
+      }
+
+      function hideFactsForm() {
+        $("#factsForm").classList.add("hidden");
+        $("#dynamicFacts").innerHTML = "";
+        $("#submitFactsBtn").disabled = true;
+        state.factsSignature = "";
+      }
+
+      function renderFactsForm(missing, questions) {
+        saveDraftFacts();
+        const signature = missing.join("|");
+        if (state.factsSignature === signature && document.activeElement?.closest("#dynamicFacts")) {
+          const canMutate = state.currentRun && !terminalStatuses.has(state.currentRun.run_status);
+          $("#submitFactsBtn").disabled = !canMutate;
+          return;
+        }
+        $("#dynamicFacts").innerHTML = missing.map((field, index) => renderFactInput(field, questions[index])).join("");
+        state.factsSignature = signature;
+        restoreDraftFacts();
+        bindDraftFactListeners();
+        $("#factsForm").classList.remove("hidden");
+        const canMutate = state.currentRun && !terminalStatuses.has(state.currentRun.run_status);
+        $("#submitFactsBtn").disabled = !canMutate;
+      }
+
+      function renderFactInput(field, question) {
+        const config = factFields[field] || { label: field, placeholder: "请补充" };
+        const label = escapeHtml(config.label || field);
+        const placeholder = escapeHtml(config.placeholder || question || "");
+        const name = escapeHtml(field);
+        const hint = question ? `<span class="muted small">${escapeHtml(question)}</span>` : "";
+        const fullSpan = config.input === "list" || config.input === "longtext" || field === "termination_reason" ? " full-span" : "";
+        if (config.input === "boolean") {
+          return `<label class="${fullSpan}">
+            ${label}
+            ${hint}
+            <select data-fact="${name}" data-type="boolean">
+              <option value="">请选择</option>
+              <option value="false">否</option>
+              <option value="true">是</option>
+            </select>
+          </label>`;
+        }
+        if (config.input === "list" || config.input === "longtext") {
+          return `<label class="${fullSpan}">
+            ${label}
+            ${hint}
+            <textarea data-fact="${name}" data-type="${config.input === "list" ? "list" : "text"}" placeholder="${placeholder}"></textarea>
+          </label>`;
+        }
+        return `<label class="${fullSpan}">
+          ${label}
+          ${hint}
+          <input data-fact="${name}" type="${escapeHtml(config.input || "text")}" placeholder="${placeholder}" />
+        </label>`;
+      }
+
+      function saveDraftFacts() {
+        for (const input of $$("#dynamicFacts [data-fact]")) {
+          state.draftFacts[input.dataset.fact] = input.value;
+        }
+      }
+
+      function restoreDraftFacts() {
+        for (const input of $$("#dynamicFacts [data-fact]")) {
+          if (Object.prototype.hasOwnProperty.call(state.draftFacts, input.dataset.fact)) {
+            input.value = state.draftFacts[input.dataset.fact];
+          }
+        }
+      }
+
+      function bindDraftFactListeners() {
+        $$("#dynamicFacts [data-fact]").forEach((input) => {
+          input.addEventListener("input", () => {
+            state.draftFacts[input.dataset.fact] = input.value;
+          });
+          input.addEventListener("change", () => {
+            state.draftFacts[input.dataset.fact] = input.value;
+          });
+        });
+      }
+
+      function renderActionButtons(run) {
+        const canMutate = Boolean(run.run_id) && !terminalStatuses.has(run.run_status);
+        $("#submitFactsBtn").disabled = !(canMutate && (run.missing_fields || []).length > 0);
+        $("#cancelBtn").disabled = !canMutate;
+        $("#loadAuditBtn").disabled = !run.run_id;
+        $("#loadReplayBtn").disabled = !run.run_id;
+      }
+
+      async function uploadFiles(files) {
+        const fileIds = [];
+        for (const file of files) {
+          const form = new FormData();
+          form.append("file", file);
+          const uploaded = await api("/api/v1/legal-agent/files", {
+            method: "POST",
+            body: form,
+            headers: { "Idempotency-Key": idempotency("web-upload") },
+          });
+          fileIds.push(uploaded.file_id);
+        }
+        return fileIds;
+      }
+
+      async function createRun(event) {
+        event.preventDefault();
+        const button = $("#createBtn");
+        setLoading(button, true, "Starting");
+        try {
+          const files = Array.from($("#fileInput").files || []);
+          const fileIds = files.length ? await uploadFiles(files) : [];
+          const payload = {
+            task_type: $("#taskType").value,
+            legal_domain: "labor_dispute",
+            jurisdiction: $("#jurisdiction").value,
+            output_options: {
+              document_type: "labor_arbitration_application",
+              format: "markdown",
+              require_human_review: $("#requireReview").checked,
+            },
+            input: {
+              text: $("#caseText").value.trim(),
+              file_ids: fileIds,
+            },
+          };
+          const created = await api("/api/v1/legal-agent/runs", {
+            method: "POST",
+            headers: { "Idempotency-Key": idempotency("web-run") },
+            body: JSON.stringify(payload),
+          });
+          toast(`Run started: ${created.run_id}`, "success");
+          await selectRun(created.run_id);
+        } catch (error) {
+          toast(error.message, "error");
+        } finally {
+          setLoading(button, false);
+        }
+      }
+
+      function readFactsForm() {
+        const facts = {};
+        for (const input of $$("#dynamicFacts [data-fact]")) {
+          const key = input.dataset.fact;
+          const type = input.dataset.type;
+          const raw = String(input.value || "").trim();
+          if (!raw) continue;
+          if (type === "boolean") {
+            facts[key] = raw === "true";
+          } else if (type === "list") {
+            facts[key] = raw
+              .split(/[,\n，、]/)
+              .map((item) => item.trim())
+              .filter(Boolean);
+          } else if (input.type === "number") {
+            facts[key] = Number(raw);
+          } else {
+            facts[key] = raw;
+          }
+        }
+        return facts;
+      }
+
+      async function submitFacts(event) {
+        event.preventDefault();
+        if (!state.selectedRunId) return;
+        const facts = readFactsForm();
+        if (!Object.keys(facts).length) {
+          toast("No facts to submit", "error");
+          return;
+        }
+        const button = $("#submitFactsBtn");
+        setLoading(button, true, "Submitting");
+        try {
+          await api(`/api/v1/legal-agent/runs/${state.selectedRunId}/facts`, {
+            method: "POST",
+            headers: { "Idempotency-Key": idempotency("web-facts") },
+            body: JSON.stringify({ facts }),
+          });
+          toast("Facts submitted", "success");
+          state.draftFacts = {};
+          state.factsSignature = "";
+          await refreshSelectedRun();
+        } catch (error) {
+          toast(error.message, "error");
+        } finally {
+          setLoading(button, false);
+        }
+      }
+
+      async function loadApprovals() {
+        if (!state.selectedRunId) return;
+        const data = await api(`/api/v1/legal-agent/runs/${state.selectedRunId}/approvals`);
+        renderApprovals(data.approvals || []);
+      }
+
+      async function loadDraft() {
+        if (!state.selectedRunId) return;
+        const box = $("#draftPreviewBox");
+        try {
+          const data = await api(`/api/v1/legal-agent/runs/${state.selectedRunId}/draft`);
+          renderDraftPreview(data);
+        } catch (error) {
+          box.innerHTML = `<div class="empty">${escapeHtml(error.message)}</div>`;
+        }
+      }
+
+      function renderDraftPreview(data) {
+        const box = $("#draftPreviewBox");
+        if (!state.selectedRunId) {
+          box.innerHTML = '<div class="empty">No run selected</div>';
+          return;
+        }
+        const draft = data.draft || {};
+        if (!data.available || !draft.markdown) {
+          const run = state.currentRun || {};
+          const message = ["DRAFT", "REVIEW", "APPROVAL"].includes(run.current_node)
+            ? "草稿还没写入完成。DRAFT / REVIEW 跑完后，这里会显示待审批草稿。"
+            : "还没有可预览草稿。先启动 run，并补齐 Agent 要求的事实。";
+          box.innerHTML = `<div class="empty">${message}</div>`;
+          return;
+        }
+        const review = data.review_result || {};
+        const approval = data.approval || {};
+        const riskNotice = Array.isArray(draft.risk_notice) ? draft.risk_notice.filter(Boolean).join("\n") : String(draft.risk_notice || "");
+        const source = draft.generation_mode === "llm" ? `${draft.llm_provider || "llm"} / ${draft.llm_model || "-"}` : "template";
+        box.innerHTML = `
+          <div class="draft-preview">
+            <div class="draft-head">
+              <div class="doc-main">
+                <strong>${escapeHtml(draft.title || "待审批草稿")}</strong>
+                <span>Approval 前预览的是 draft artifact；批准后才会生成 Documents 里的 MD / DOCX。</span>
+              </div>
+              <span class="badge ${approval.status || "RUNNING"}">${escapeHtml(approval.status || "DRAFT_READY")}</span>
+            </div>
+            <div class="draft-meta">
+              <div><span>Document Type</span><strong>${escapeHtml(draft.document_type || "-")}</strong></div>
+              <div><span>Generation</span><strong>${escapeHtml(source)}</strong></div>
+              <div><span>Review</span><strong>${review.passed === false ? "needs check" : review.passed === true ? "passed" : "-"}</strong></div>
+            </div>
+            ${riskNotice ? `<div class="draft-warning">${escapeHtml(riskNotice)}</div>` : ""}
+            <pre class="preview">${escapeHtml(draft.markdown)}</pre>
+          </div>
+        `;
+      }
+
+      function renderApprovals(approvals) {
+        const box = $("#approvalBox");
+        if (!state.selectedRunId) {
+          box.innerHTML = '<div class="empty">No run selected</div>';
+          return;
+        }
+        if (!approvals.length) {
+          const run = state.currentRun || {};
+          const message = run.current_node === "DRAFT" || run.current_node === "REVIEW"
+            ? "还没有审批单。当前草稿/审查由 worker 自动执行，审查通过后才会创建审批请求。"
+            : "还没有审批单。只有进入 WAITING_APPROVAL 后这里才会出现 Approve / Deny。";
+          box.innerHTML = `<div class="empty">${message}</div>`;
+          return;
+        }
+        box.innerHTML = approvals
+          .map(
+            (approval) => `
+              <div class="doc-item">
+                <div class="doc-main">
+                  <strong>${approval.approval_id}</strong>
+                  <span>${approval.status} · ${approval.risk_level || "-"} · ${fmtDate(approval.created_at)}</span>
+                </div>
+                <div class="inline">
+                  ${
+                    approval.status === "PENDING"
+                      ? `<button class="primary" type="button" data-approve="${approval.approval_id}">Approve</button>
+                         <button type="button" data-deny="${approval.approval_id}">Deny</button>`
+                      : `<span class="badge ${approval.status}">${approval.status}</span>`
+                  }
+                </div>
+              </div>
+            `,
+          )
+          .join("");
+        $$("[data-approve]").forEach((button) => button.addEventListener("click", () => decideApproval(button.dataset.approve, true)));
+        $$("[data-deny]").forEach((button) => button.addEventListener("click", () => decideApproval(button.dataset.deny, false)));
+      }
+
+      async function decideApproval(approvalId, approved) {
+        if (!state.selectedRunId) return;
+        try {
+          await api(`/api/v1/legal-agent/runs/${state.selectedRunId}/approvals/${approvalId}`, {
+            method: "POST",
+            headers: { "Idempotency-Key": idempotency("web-approval") },
+            body: JSON.stringify({
+              approved,
+              approver: "web-reviewer",
+              reason: approved ? "approved from web console" : "denied from web console",
+            }),
+          });
+          toast(approved ? "Approved" : "Denied", approved ? "success" : "info");
+          await refreshSelectedRun();
+        } catch (error) {
+          toast(error.message, "error");
+        }
+      }
+
+      async function loadDocuments() {
+        if (!state.selectedRunId) return;
+        const data = await api(`/api/v1/legal-agent/runs/${state.selectedRunId}/documents`);
+        renderDocuments(data.documents || []);
+      }
+
+      function renderDocuments(documents) {
+        const box = $("#documentsBox");
+        if (!state.selectedRunId) {
+          box.innerHTML = '<div class="empty">No run selected</div>';
+          return;
+        }
+        if (!documents.length) {
+          box.innerHTML = '<div class="empty">No generated document yet</div>';
+          $("#documentPreview").classList.add("hidden");
+          return;
+        }
+        box.innerHTML = documents
+          .map(
+            (doc) => `
+              <div class="doc-item">
+                <div class="doc-main">
+                  <strong>${doc.title || doc.document_id}</strong>
+                  <span>${doc.status} · ${doc.document_type} · ${fmtDate(doc.updated_at || doc.created_at)}</span>
+                </div>
+                <div class="inline">
+                  <button type="button" data-preview="${doc.document_id}">Preview</button>
+                  <a href="/api/v1/legal-agent/runs/${state.selectedRunId}/documents/${doc.document_id}/markdown" target="_blank" rel="noreferrer">MD</a>
+                  <a href="/api/v1/legal-agent/runs/${state.selectedRunId}/documents/${doc.document_id}/docx" target="_blank" rel="noreferrer">DOCX</a>
+                </div>
+              </div>
+            `,
+          )
+          .join("");
+        $$("[data-preview]").forEach((button) => button.addEventListener("click", () => previewDocument(button.dataset.preview)));
+      }
+
+      async function previewDocument(documentId) {
+        const doc = await api(`/api/v1/legal-agent/runs/${state.selectedRunId}/documents/${documentId}`);
+        const preview = $("#documentPreview");
+        preview.textContent = doc.markdown || JSON.stringify(doc.document || {}, null, 2);
+        preview.classList.remove("hidden");
+      }
+
+      async function loadJson(kind) {
+        if (!state.selectedRunId) return;
+        const path = kind === "audit" ? "audit" : "replay";
+        try {
+          const data = await api(`/api/v1/legal-agent/runs/${state.selectedRunId}/${path}`);
+          $("#auditBox").textContent = JSON.stringify(data, null, 2);
+        } catch (error) {
+          toast(error.message, "error");
+        }
+      }
+
+      async function cancelRun() {
+        if (!state.selectedRunId) return;
+        try {
+          await api(`/api/v1/legal-agent/runs/${state.selectedRunId}/cancel`, {
+            method: "POST",
+            headers: { "Idempotency-Key": idempotency("web-cancel") },
+            body: JSON.stringify({ reason: "cancelled_from_web", requested_by: "web-user" }),
+          });
+          toast("Run cancelled", "success");
+          await refreshSelectedRun();
+        } catch (error) {
+          toast(error.message, "error");
+        }
+      }
+
+      function setupTabs() {
+        $$(".tab").forEach((tab) => {
+          tab.addEventListener("click", () => {
+            $$(".tab").forEach((item) => item.classList.remove("active"));
+            $$(".tab-panel").forEach((item) => item.classList.remove("active"));
+            tab.classList.add("active");
+            $(`#tab-${tab.dataset.tab}`).classList.add("active");
+          });
+        });
+      }
+
+      function startPolling() {
+        if (state.pollTimer) window.clearInterval(state.pollTimer);
+        state.pollTimer = window.setInterval(async () => {
+          if (!state.selectedRunId || (state.currentRun && terminalStatuses.has(state.currentRun.run_status))) {
+            return;
+          }
+          try {
+            await refreshSelectedRun();
+            await loadRuns();
+          } catch (error) {
+            console.warn(error);
+          }
+        }, 3000);
+      }
+
+      async function init() {
+        setupTabs();
+        renderFlow("", "");
+        $("#createForm").addEventListener("submit", createRun);
+        $("#factsForm").addEventListener("submit", submitFacts);
+        $("#refreshBtn").addEventListener("click", async () => {
+          await checkHealth();
+          await loadRuns();
+          if (state.selectedRunId) await refreshSelectedRun();
+        });
+        $("#cancelBtn").addEventListener("click", cancelRun);
+        $("#loadAuditBtn").addEventListener("click", () => loadJson("audit"));
+        $("#loadReplayBtn").addEventListener("click", () => loadJson("replay"));
+
+        await checkHealth();
+        await loadRuns();
+        if (state.selectedRunId) {
+          await refreshSelectedRun().catch(() => {
+            localStorage.removeItem("legal-agent:selected-run");
+            state.selectedRunId = "";
+          });
+        }
+        startPolling();
+      }
+
+      init().catch((error) => toast(error.message, "error"));
+    </script>
+  </body>
+</html>

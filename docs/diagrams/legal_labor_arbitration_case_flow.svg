@@ -1,0 +1,228 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1180" viewBox="0 0 1800 1180">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="55%" stop-color="#f5f9fc"/>
+      <stop offset="100%" stop-color="#f7fbff"/>
+    </linearGradient>
+    <linearGradient id="core" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#064e3b"/>
+      <stop offset="100%" stop-color="#0f766e"/>
+    </linearGradient>
+    <linearGradient id="soft" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ecfdf5"/>
+      <stop offset="100%" stop-color="#eff6ff"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#0f172a" flood-opacity="0.10"/>
+    </filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#475569"/>
+    </marker>
+    <style>
+      .title{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-size:38px;font-weight:800;fill:#0f172a;letter-spacing:0}
+      .subtitle{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Arial,sans-serif;font-size:17px;fill:#64748b}
+      .section{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-size:18px;font-weight:800;fill:#0f172a}
+      .node-title{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-size:18px;font-weight:800;fill:#0f172a}
+      .node-cn{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Arial,sans-serif;font-size:13px;fill:#475569}
+      .small{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Arial,sans-serif;font-size:12px;fill:#64748b}
+      .tiny{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Arial,sans-serif;font-size:11px;fill:#64748b}
+      .pill{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-size:12px;font-weight:800;fill:#0f172a}
+      .tag{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-size:11px;font-weight:800;fill:#166534}
+      .white-title{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-size:22px;font-weight:800;fill:#ffffff}
+      .white-cn{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Arial,sans-serif;font-size:13px;fill:#d1fae5}
+      .panel{fill:#ffffff;stroke:#d8e1ec;stroke-width:1.4;rx:28;filter:url(#shadow)}
+      .box{fill:url(#soft);stroke:#cbd5e1;stroke-width:1.25;rx:18}
+      .store{fill:#ffffff;stroke:#cbd5e1;stroke-width:1.25;rx:18}
+      .warn{fill:#fff7ed;stroke:#fdba74;stroke-width:1.25;rx:18}
+      .risk{fill:#fef2f2;stroke:#fca5a5;stroke-width:1.25;rx:18}
+      .line{stroke:#475569;stroke-width:2.1;fill:none;marker-end:url(#arrow)}
+      .softline{stroke:#94a3b8;stroke-width:1.7;fill:none;marker-end:url(#arrow);stroke-dasharray:5 7}
+      .supportline{stroke:#cbd5e1;stroke-width:1.8;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+
+  <rect width="1800" height="1180" fill="url(#bg)"/>
+
+  <text x="80" y="76" class="title">Labor Arbitration Agent Case Flow</text>
+  <text x="82" y="108" class="subtitle">示例：生成劳动仲裁申请书，从用户事实到可信文书草稿</text>
+
+  <rect x="1180" y="48" width="520" height="72" rx="18" fill="#ffffff" stroke="#d8e1ec" filter="url(#shadow)"/>
+  <text x="1208" y="79" class="pill">Case Principle</text>
+  <text x="1208" y="103" class="small">缺事实先追问；有主张必须有证据；高风险结果进入人工确认</text>
+
+  <!-- Main flow -->
+  <rect x="80" y="160" width="1640" height="360" rx="30" class="panel"/>
+  <text x="112" y="202" class="section">Main Case Workflow</text>
+  <text x="112" y="226" class="small">用户不是直接拿到模型作文，而是经过事实补全、证据检索、工具计算、文书生成和复核</text>
+
+  <g transform="translate(120 275)">
+    <rect class="box" x="0" y="0" width="190" height="120"/>
+    <text x="26" y="34" class="node-title">User Input</text>
+    <text x="26" y="60" class="node-cn">无故辞退 / 欠薪</text>
+    <text x="26" y="88" class="small">free text + files</text>
+  </g>
+  <path class="line" d="M310 335 L360 335"/>
+  <g transform="translate(368 275)">
+    <rect class="box" x="0" y="0" width="210" height="120"/>
+    <text x="26" y="34" class="node-title">Understand</text>
+    <text x="26" y="60" class="node-cn">文书生成 / 劳动争议</text>
+    <text x="26" y="88" class="small">risk: medium-high</text>
+  </g>
+  <path class="line" d="M578 335 L628 335"/>
+  <g transform="translate(636 275)">
+    <rect class="warn" x="0" y="0" width="220" height="120"/>
+    <text x="26" y="34" class="node-title">Fact Completeness</text>
+    <text x="26" y="60" class="node-cn">缺失事实检查</text>
+    <text x="26" y="88" class="small">missing facts -> ask user</text>
+  </g>
+  <path class="line" d="M856 335 L906 335"/>
+  <g transform="translate(914 260)">
+    <rect x="0" y="0" width="245" height="150" rx="22" fill="url(#core)" stroke="#0f766e"/>
+    <text x="28" y="42" class="white-title">Legal Agent Run</text>
+    <text x="28" y="72" class="white-cn">LangGraph nodes</text>
+    <text x="28" y="98" class="white-cn">AgentLedger runtime</text>
+    <text x="28" y="124" class="white-cn">state + checkpoint</text>
+  </g>
+  <path class="line" d="M1159 335 L1209 335"/>
+  <g transform="translate(1218 275)">
+    <rect class="box" x="0" y="0" width="210" height="120"/>
+    <text x="26" y="34" class="node-title">Draft</text>
+    <text x="26" y="60" class="node-cn">生成申请书草稿</text>
+    <text x="26" y="88" class="small">claims + facts + basis</text>
+  </g>
+  <path class="line" d="M1428 335 L1478 335"/>
+  <g transform="translate(1486 275)">
+    <rect class="risk" x="0" y="0" width="190" height="120"/>
+    <text x="26" y="34" class="node-title">Review</text>
+    <text x="26" y="60" class="node-cn">校验 / 审批 / 输出</text>
+    <text x="26" y="88" class="small">fact · citation · risk</text>
+  </g>
+
+  <path class="softline" d="M746 275 C746 225, 190 225, 190 275"/>
+  <rect x="395" y="214" width="220" height="32" rx="16" fill="#ffffff" stroke="#fdba74"/>
+  <text x="430" y="235" class="pill">Ask User for Missing Facts</text>
+
+  <path class="supportline" d="M746 395 L330 570"/>
+  <path class="supportline" d="M1036 410 L895 570"/>
+  <path class="supportline" d="M1036 410 L1465 570"/>
+
+  <!-- Fact card -->
+  <rect x="80" y="570" width="500" height="300" rx="30" class="panel"/>
+  <text x="112" y="612" class="section">Fact Table</text>
+  <rect x="395" y="590" width="130" height="28" rx="14" fill="#ecfdf5" stroke="#86efac"/>
+  <text x="423" y="608" class="tag">feeds Agent Run</text>
+  <text x="112" y="636" class="small">事实表只来自用户输入或上传材料，不能由模型编造</text>
+
+  <g transform="translate(120 675)">
+    <rect class="store" x="0" y="0" width="200" height="48"/>
+    <text x="24" y="30" class="pill">Employee</text>
+    <text x="118" y="30" class="small">申请人</text>
+    <rect class="store" x="232" y="0" width="200" height="48"/>
+    <text x="256" y="30" class="pill">Company</text>
+    <text x="350" y="30" class="small">被申请人</text>
+    <rect class="store" x="0" y="65" width="200" height="48"/>
+    <text x="24" y="95" class="pill">Work Dates</text>
+    <text x="126" y="95" class="small">入离职时间</text>
+    <rect class="store" x="232" y="65" width="200" height="48"/>
+    <text x="256" y="95" class="pill">Salary</text>
+    <text x="324" y="95" class="small">工资金额</text>
+    <rect class="store" x="0" y="130" width="200" height="48"/>
+    <text x="24" y="160" class="pill">Evidence</text>
+    <text x="108" y="160" class="small">工资流水 / 聊天</text>
+    <rect class="store" x="232" y="130" width="200" height="48"/>
+    <text x="256" y="160" class="pill">Claims</text>
+    <text x="326" y="160" class="small">仲裁请求</text>
+  </g>
+
+  <!-- RAG -->
+  <rect x="625" y="570" width="540" height="300" rx="30" class="panel"/>
+  <text x="657" y="612" class="section">Legal RAG &amp; Evidence Pack</text>
+  <rect x="958" y="590" width="138" height="28" rx="14" fill="#ecfdf5" stroke="#86efac"/>
+  <text x="987" y="608" class="tag">grounds Draft</text>
+  <text x="657" y="636" class="small">把劳动争议相关法律依据和类案整理成可引用证据包</text>
+
+  <g transform="translate(665 675)">
+    <rect class="store" x="0" y="0" width="210" height="56"/>
+    <text x="24" y="32" class="pill">Law &amp; Regulation</text>
+    <text x="24" y="50" class="tiny">劳动合同法 / 仲裁法</text>
+    <rect class="store" x="250" y="0" width="210" height="56"/>
+    <text x="274" y="32" class="pill">Similar Cases</text>
+    <text x="274" y="50" class="tiny">未签合同 / 欠薪 / 违法解除</text>
+    <rect class="store" x="0" y="76" width="210" height="56"/>
+    <text x="24" y="108" class="pill">Templates</text>
+    <text x="24" y="126" class="tiny">劳动仲裁申请书模板</text>
+    <rect class="store" x="250" y="76" width="210" height="56"/>
+    <text x="274" y="108" class="pill">Rerank + Filter</text>
+    <text x="274" y="126" class="tiny">地域 / 时效 / 法条有效性</text>
+  </g>
+  <rect x="740" y="828" width="310" height="34" rx="17" fill="#ecfdf5" stroke="#86efac"/>
+  <text x="800" y="850" class="pill">Evidence Pack: source + quote + anchor + score</text>
+
+  <!-- Tools -->
+  <rect x="1210" y="570" width="510" height="300" rx="30" class="panel"/>
+  <text x="1242" y="612" class="section">Tool Use</text>
+  <rect x="1530" y="590" width="126" height="28" rx="14" fill="#fff7ed" stroke="#fdba74"/>
+  <text x="1555" y="608" class="pill">tool results</text>
+  <text x="1242" y="636" class="small">确定性计算和外部能力交给工具，模型不直接心算或编造结果</text>
+
+  <g transform="translate(1250 675)">
+    <rect class="store" x="0" y="0" width="205" height="56"/>
+    <text x="24" y="32" class="pill">Salary Calculator</text>
+    <text x="24" y="50" class="tiny">欠薪 / 双倍工资 / 赔偿金</text>
+    <rect class="store" x="245" y="0" width="205" height="56"/>
+    <text x="269" y="32" class="pill">Case Search API</text>
+    <text x="269" y="50" class="tiny">类案检索</text>
+    <rect class="store" x="0" y="76" width="205" height="56"/>
+    <text x="24" y="108" class="pill">Template Tool</text>
+    <text x="24" y="126" class="tiny">文书结构填充</text>
+    <rect class="store" x="245" y="76" width="205" height="56"/>
+    <text x="269" y="108" class="pill">Format Checker</text>
+    <text x="269" y="126" class="tiny">格式完整性检查</text>
+  </g>
+  <rect x="1320" y="828" width="300" height="34" rx="17" fill="#fff7ed" stroke="#fdba74"/>
+  <text x="1370" y="850" class="pill">Tool Ledger: input + output + idempotency</text>
+
+  <!-- Output -->
+  <rect x="80" y="920" width="1640" height="170" rx="30" class="panel"/>
+  <text x="112" y="962" class="section">Final Deliverable</text>
+  <rect x="405" y="940" width="214" height="28" rx="14" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="434" y="958" class="pill">compiled from facts + evidence + tools</text>
+  <text x="112" y="986" class="small">输出不是单篇作文，而是带依据、风险和待补充信息的法律文书草稿</text>
+
+  <g transform="translate(190 1015)">
+    <rect class="box" x="0" y="0" width="210" height="52"/>
+    <text x="24" y="32" class="pill">Application Draft</text>
+    <text x="150" y="32" class="small">申请书</text>
+  </g>
+  <g transform="translate(440 1015)">
+    <rect class="box" x="0" y="0" width="210" height="52"/>
+    <text x="24" y="32" class="pill">Legal Basis</text>
+    <text x="122" y="32" class="small">引用依据</text>
+  </g>
+  <g transform="translate(690 1015)">
+    <rect class="box" x="0" y="0" width="210" height="52"/>
+    <text x="24" y="32" class="pill">Evidence List</text>
+    <text x="135" y="32" class="small">证据清单</text>
+  </g>
+  <g transform="translate(940 1015)">
+    <rect class="warn" x="0" y="0" width="210" height="52"/>
+    <text x="24" y="32" class="pill">Missing Info</text>
+    <text x="134" y="32" class="small">待补充</text>
+  </g>
+  <g transform="translate(1190 1015)">
+    <rect class="risk" x="0" y="0" width="210" height="52"/>
+    <text x="24" y="32" class="pill">Risk Notice</text>
+    <text x="130" y="32" class="small">风险提示</text>
+  </g>
+  <g transform="translate(1440 1015)">
+    <rect class="risk" x="0" y="0" width="210" height="52"/>
+    <text x="24" y="32" class="pill">Human Approval</text>
+    <text x="158" y="32" class="small">确认</text>
+  </g>
+
+  <!-- Runtime rail -->
+  <rect x="80" y="1120" width="1640" height="42" rx="18" fill="#0f172a"/>
+  <text x="112" y="1147" class="white-title" font-size="16">AgentLedger Runtime</text>
+  <text x="320" y="1147" class="white-cn">run state / checkpoint / tool ledger / idempotency / policy / approval / audit replay</text>
+</svg>

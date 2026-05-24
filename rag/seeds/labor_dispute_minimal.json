@@ -1,0 +1,78 @@
+{
+  "domain": "labor_dispute",
+  "chunk_metadata_path": "rag/library/labor_dispute/chunk_metadata.yaml",
+  "documents": [
+    {
+      "source_id": "npc_law_database",
+      "doc_id": "law_labor_contract_2012_demo",
+      "doc_type": "law",
+      "authority_level": "A0",
+      "title": "中华人民共和国劳动合同法",
+      "source_url": "https://www.gov.cn/gongbao/content/2007/content_711013.htm",
+      "jurisdiction": "CN",
+      "issuing_authority": "全国人民代表大会常务委员会",
+      "document_no": null,
+      "content_path": "rag/library/labor_dispute/labor_contract_law_key_articles.md"
+    },
+    {
+      "source_id": "npc_law_database",
+      "doc_id": "law_labor_arbitration_2007_demo",
+      "doc_type": "law",
+      "authority_level": "A0",
+      "title": "中华人民共和国劳动争议调解仲裁法",
+      "source_url": "https://www.gov.cn/flfg/2007-12/29/content_847310.htm",
+      "jurisdiction": "CN",
+      "issuing_authority": "全国人民代表大会常务委员会",
+      "document_no": null,
+      "content_path": "rag/library/labor_dispute/labor_dispute_arbitration_law_key_articles.md"
+    },
+    {
+      "source_id": "mohrss_rules",
+      "doc_id": "rule_wage_payment_interim_demo",
+      "doc_type": "department_rule",
+      "authority_level": "A1",
+      "title": "工资支付暂行规定",
+      "source_url": "https://www.mohrss.gov.cn/xxgk2020/fdzdgknr/zcfg/gfxwj/ldgx/201407/t20140717_136848.html",
+      "jurisdiction": "CN",
+      "issuing_authority": "原劳动部",
+      "document_no": "劳部发〔1994〕489号",
+      "content_path": "rag/library/labor_dispute/wage_payment_interim_rules_key_articles.md"
+    },
+    {
+      "source_id": "local_hrss_templates",
+      "doc_id": "template_labor_arbitration_application_cn_bj_demo",
+      "doc_type": "template",
+      "authority_level": "B0",
+      "title": "劳动人事争议仲裁申请书模板",
+      "source_url": "https://rsj.beijing.gov.cn/ywsite/bjsrlsbfwgf/ldgx1/ldqyybz/202312/t20231229_3518839.html",
+      "jurisdiction": "CN-BJ",
+      "issuing_authority": "地方人社局或劳动人事争议仲裁机构",
+      "document_no": null,
+      "content_path": "rag/library/labor_dispute/labor_arbitration_application_template_cn_bj.md"
+    },
+    {
+      "source_id": "spc_mohrss_typical_cases",
+      "doc_id": "case_spc_mohrss_labor_cases_batch2_demo",
+      "doc_type": "case",
+      "authority_level": "A1",
+      "title": "劳动人事争议典型案例（第二批）",
+      "source_url": "https://www.court.gov.cn/zixun/xiangqing/319151.html",
+      "jurisdiction": "CN",
+      "issuing_authority": "最高人民法院、人力资源和社会保障部",
+      "document_no": null,
+      "content_path": "rag/library/labor_dispute/spc_mohrss_typical_labor_cases_batch2.md"
+    },
+    {
+      "source_id": "spc_mohrss_typical_cases",
+      "doc_id": "case_spc_mohrss_new_employment_cases_batch3_demo",
+      "doc_type": "case",
+      "authority_level": "A1",
+      "title": "劳动人事争议典型案例（第三批，新就业形态）",
+      "source_url": "https://www.court.gov.cn/zixun/xiangqing/401172.html",
+      "jurisdiction": "CN",
+      "issuing_authority": "最高人民法院、人力资源和社会保障部",
+      "document_no": null,
+      "content_path": "rag/library/labor_dispute/spc_mohrss_new_employment_typical_cases_batch3.md"
+    }
+  ]
+}

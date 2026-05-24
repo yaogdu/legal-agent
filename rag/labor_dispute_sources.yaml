@@ -1,0 +1,213 @@
+version: 0.1
+domain: labor_dispute
+updated_at: "2026-05-23"
+purpose: "Seed manifest for Legal RAG ingestion. Public legal sources must be traceable to official URLs; demo snapshots are local files and user materials are indexed per run only."
+
+authority_levels:
+  A0: "Official laws, administrative regulations, judicial interpretations, ministry rules, and official normative documents."
+  A1: "Official typical cases, guiding cases, and People's Court Case Database entries."
+  B0: "Local HRSS or arbitration-body templates, guides, and local rules."
+  B1: "Public judgments and public case documents used only for case similarity, never as the sole legal basis."
+  U0: "User-uploaded run-scoped evidence."
+
+sources:
+  - source_id: npc_law_database
+    authority_level: A0
+    name: "国家法律法规数据库"
+    entry_url: "https://flk.npc.gov.cn/"
+    owner: "全国人大常委会办公厅"
+    source_types: ["law", "administrative_regulation", "local_regulation", "judicial_interpretation"]
+    ingestion_mode: "manual_seed_then_periodic_check"
+    refresh_policy: "monthly and before release"
+    notes: "Primary source for national law text, effective dates, amendment history, and citation anchors."
+    seed_documents:
+      - title: "中华人民共和国劳动法"
+        doc_type: law
+        jurisdiction: CN
+        search_keywords: ["中华人民共和国劳动法"]
+      - title: "中华人民共和国劳动合同法"
+        doc_type: law
+        jurisdiction: CN
+        search_keywords: ["中华人民共和国劳动合同法"]
+      - title: "中华人民共和国劳动争议调解仲裁法"
+        doc_type: law
+        jurisdiction: CN
+        search_keywords: ["中华人民共和国劳动争议调解仲裁法"]
+      - title: "中华人民共和国社会保险法"
+        doc_type: law
+        jurisdiction: CN
+        search_keywords: ["中华人民共和国社会保险法"]
+
+  - source_id: gov_regulations
+    authority_level: A0
+    name: "中国政府网政策法规库"
+    entry_url: "https://www.gov.cn/zhengce/"
+    owner: "国务院办公厅"
+    source_types: ["administrative_regulation", "policy"]
+    ingestion_mode: "manual_seed_then_snapshot"
+    refresh_policy: "monthly"
+    seed_documents:
+      - title: "中华人民共和国劳动合同法实施条例"
+        doc_type: administrative_regulation
+        jurisdiction: CN
+        search_keywords: ["劳动合同法实施条例"]
+      - title: "工伤保险条例"
+        doc_type: administrative_regulation
+        jurisdiction: CN
+        search_keywords: ["工伤保险条例"]
+      - title: "职工带薪年休假条例"
+        doc_type: administrative_regulation
+        jurisdiction: CN
+        search_keywords: ["职工带薪年休假条例"]
+
+  - source_id: mohrss_rules
+    authority_level: A0
+    name: "人力资源和社会保障部"
+    entry_url: "https://www.mohrss.gov.cn/"
+    owner: "人力资源和社会保障部"
+    source_types: ["department_rule", "normative_document", "typical_case"]
+    ingestion_mode: "manual_seed_then_periodic_check"
+    refresh_policy: "monthly and before release"
+    seed_documents:
+      - title: "工资支付暂行规定"
+        doc_type: department_rule
+        jurisdiction: CN
+        search_keywords: ["工资支付暂行规定"]
+      - title: "最低工资规定"
+        doc_type: department_rule
+        jurisdiction: CN
+        search_keywords: ["最低工资规定"]
+      - title: "劳动人事争议仲裁办案规则"
+        doc_type: department_rule
+        jurisdiction: CN
+        search_keywords: ["劳动人事争议仲裁办案规则"]
+      - title: "劳动人事争议仲裁组织规则"
+        doc_type: department_rule
+        jurisdiction: CN
+        search_keywords: ["劳动人事争议仲裁组织规则"]
+      - title: "劳动人事争议典型案例"
+        doc_type: typical_case
+        jurisdiction: CN
+        search_keywords: ["劳动人事争议典型案例", "人力资源社会保障部", "最高人民法院"]
+
+  - source_id: spc_judicial_interpretations
+    authority_level: A0
+    name: "最高人民法院"
+    entry_url: "https://www.court.gov.cn/"
+    owner: "最高人民法院"
+    source_types: ["judicial_interpretation", "typical_case", "guiding_case"]
+    ingestion_mode: "manual_seed_then_periodic_check"
+    refresh_policy: "monthly and before release"
+    seed_documents:
+      - title: "最高人民法院关于审理劳动争议案件适用法律问题的解释（一）"
+        doc_type: judicial_interpretation
+        jurisdiction: CN
+        search_keywords: ["关于审理劳动争议案件适用法律问题的解释（一）"]
+      - title: "最高人民法院关于审理劳动争议案件适用法律问题的解释（二）"
+        doc_type: judicial_interpretation
+        jurisdiction: CN
+        search_keywords: ["关于审理劳动争议案件适用法律问题的解释（二）"]
+      - title: "劳动人事争议典型案例"
+        doc_type: typical_case
+        jurisdiction: CN
+        search_keywords: ["劳动人事争议典型案例", "最高人民法院", "人力资源社会保障部"]
+
+  - source_id: spc_mohrss_typical_cases
+    authority_level: A1
+    name: "最高人民法院、人力资源和社会保障部劳动人事争议典型案例"
+    entry_url: "https://www.court.gov.cn/"
+    owner: "最高人民法院、人力资源和社会保障部"
+    source_types: ["case", "typical_case"]
+    ingestion_mode: "manual_summary_snapshot"
+    refresh_policy: "monthly and before release"
+    notes: "Demo stores short local summaries and official locators only; do not use public case full text as sole legal basis."
+    seed_documents:
+      - title: "劳动人事争议典型案例（第二批）"
+        doc_type: case
+        jurisdiction: CN
+        search_keywords: ["劳动人事争议典型案例", "加班费", "未签劳动合同", "拖欠工资"]
+      - title: "劳动人事争议典型案例（第三批，新就业形态）"
+        doc_type: case
+        jurisdiction: CN
+        search_keywords: ["劳动人事争议典型案例", "新就业形态", "劳动关系"]
+
+  - source_id: rmfy_case_library
+    authority_level: A1
+    name: "人民法院案例库"
+    entry_url: "https://rmfyalk.court.gov.cn/"
+    owner: "最高人民法院"
+    source_types: ["case"]
+    ingestion_mode: "search_sample_then_human_review"
+    refresh_policy: "monthly"
+    allowed_usage: "Case analysis and analogical reasoning. Do not cite as statute. Store official title, issue, holding, and locator."
+    seed_queries:
+      - "劳动争议 未签劳动合同 二倍工资"
+      - "劳动争议 拖欠工资"
+      - "劳动争议 违法解除 劳动合同"
+      - "劳动争议 社保 经济补偿"
+
+  - source_id: wenshu_public_cases
+    authority_level: B1
+    name: "中国裁判文书网"
+    entry_url: "https://wenshu.court.gov.cn/"
+    owner: "最高人民法院"
+    source_types: ["judgment"]
+    ingestion_mode: "deferred"
+    refresh_policy: "manual"
+    allowed_usage: "Supplementary case similarity only. Respect site terms, access controls, and de-identification requirements."
+    seed_queries:
+      - "劳动争议 拖欠工资 未签劳动合同"
+      - "劳动争议 违法解除劳动合同 赔偿金"
+
+  - source_id: local_hrss_templates
+    authority_level: B0
+    name: "地方人社局和劳动人事争议仲裁机构模板"
+    entry_url: "https://rsj.beijing.gov.cn/"
+    owner: "local_hrss_or_arbitration_body"
+    source_types: ["template", "local_guide"]
+    ingestion_mode: "manual_template_registry"
+    refresh_policy: "quarterly"
+    seed_documents:
+      - title: "劳动人事争议仲裁申请书"
+        doc_type: template
+        jurisdiction: CN-BJ
+        search_keywords: ["北京市", "劳动人事争议仲裁申请书"]
+      - title: "证据目录"
+        doc_type: template
+        jurisdiction: CN-BJ
+        search_keywords: ["北京市", "劳动人事争议", "证据目录"]
+
+  - source_id: user_uploaded_materials
+    authority_level: U0
+    name: "用户上传材料"
+    entry_url: "run_scoped_upload"
+    owner: "user"
+    source_types: ["user_material"]
+    ingestion_mode: "per_run_temporary_index"
+    refresh_policy: "per_run"
+    allowed_usage: "Fact grounding only. Do not promote to public corpus."
+
+chunking:
+  law:
+    strategy: "law_chapter_article_paragraph_item"
+    citation_anchor: "{law_name}#{article_no}#{paragraph_no?}#{item_no?}"
+  judicial_interpretation:
+    strategy: "interpretation_article_paragraph_item"
+    citation_anchor: "{title}#{article_no}#{paragraph_no?}"
+  case:
+    strategy: "facts_issue_reasoning_holding_result"
+    citation_anchor: "{case_title}#{section}"
+  template:
+    strategy: "document_section_fields"
+    citation_anchor: "{template_id}#{section}"
+  user_material:
+    strategy: "file_page_paragraph_ocr_box"
+    citation_anchor: "{file_id}#page={page}#para={paragraph}"
+
+retrieval_policy:
+  default_authority_order: ["A0", "A1", "B0", "B1", "U0"]
+  legal_basis_allowed_levels: ["A0", "A1"]
+  template_allowed_levels: ["B0"]
+  fact_basis_allowed_levels: ["U0", "user_input"]
+  unsupported_claim_behavior: "mark_uncertain_or_ask_user"
+  public_case_fulltext_storage: "store_locator_and_short_excerpt_only"

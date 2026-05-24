@@ -1,0 +1,353 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: legal_agent
+      POSTGRES_PASSWORD: legal_agent
+      POSTGRES_DB: legal_agent
+    ports:
+      - "25432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U legal_agent -d legal_agent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  temporal:
+    image: temporalio/auto-setup:1.24
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB: postgres12
+      DB_PORT: 5432
+      POSTGRES_USER: legal_agent
+      POSTGRES_PWD: legal_agent
+      POSTGRES_SEEDS: postgres
+    ports:
+      - "7233:7233"
+
+  temporal-ui:
+    image: temporalio/ui:2.30.1
+    depends_on:
+      - temporal
+    environment:
+      TEMPORAL_ADDRESS: temporal:7233
+      TEMPORAL_CORS_ORIGINS: http://localhost:3000
+    ports:
+      - "28088:8080"
+
+  legal-agent-api:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+      temporal:
+        condition: service_started
+    env_file:
+      - .env.example
+    environment:
+      DATABASE_DSN: postgresql://legal_agent:legal_agent@postgres:5432/legal_agent
+      AGENTLEDGER_POSTGRES_DSN: postgresql://legal_agent:legal_agent@postgres:5432/legal_agent
+      TEMPORAL_ADDRESS: temporal:7233
+      TEMPORAL_SEARCH_ATTRIBUTES_ENABLED: ${TEMPORAL_SEARCH_ATTRIBUTES_ENABLED:-true}
+      AGENTLEDGER_SRC: /opt/agent-runtime/src
+      AGENTLEDGER_BLOB_DIR: /data/agentledger/blobs
+      LEGAL_AGENT_DATA_DIR: /data/legal-agent
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://langfuse-web:3000/api/public/otel
+      LANGFUSE_ENABLED: ${LANGFUSE_ENABLED:-false}
+      LANGFUSE_HOST: ${LANGFUSE_HOST:-http://langfuse-web:3000}
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+      LANGFUSE_PROJECT: ${LANGFUSE_PROJECT:-legal-agent}
+      LEGAL_AGENT_LLM_ENABLED: ${LEGAL_AGENT_LLM_ENABLED:-false}
+      LEGAL_AGENT_LLM_PROVIDER: ${LEGAL_AGENT_LLM_PROVIDER:-openai_compatible}
+      LEGAL_AGENT_LLM_BASE_URL: ${LEGAL_AGENT_LLM_BASE_URL:-}
+      LEGAL_AGENT_LLM_API_KEY: ${LEGAL_AGENT_LLM_API_KEY:-}
+      LEGAL_AGENT_LLM_MODEL: ${LEGAL_AGENT_LLM_MODEL:-}
+      LEGAL_AGENT_LLM_TIMEOUT_SECONDS: ${LEGAL_AGENT_LLM_TIMEOUT_SECONDS:-60}
+      LEGAL_AGENT_LLM_TEMPERATURE: ${LEGAL_AGENT_LLM_TEMPERATURE:-0.2}
+    volumes:
+      - ../agent-runtime:/opt/agent-runtime:ro
+      - shared-data:/data
+    ports:
+      - "28080:8080"
+    command: ["sh", "-c", "legal-agent migrate && legal-agent serve-api"]
+
+  legal-agent-worker:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+      temporal:
+        condition: service_started
+    env_file:
+      - .env.example
+    environment:
+      DATABASE_DSN: postgresql://legal_agent:legal_agent@postgres:5432/legal_agent
+      AGENTLEDGER_POSTGRES_DSN: postgresql://legal_agent:legal_agent@postgres:5432/legal_agent
+      TEMPORAL_ADDRESS: temporal:7233
+      TEMPORAL_SEARCH_ATTRIBUTES_ENABLED: ${TEMPORAL_SEARCH_ATTRIBUTES_ENABLED:-true}
+      AGENTLEDGER_SRC: /opt/agent-runtime/src
+      AGENTLEDGER_BLOB_DIR: /data/agentledger/blobs
+      LEGAL_AGENT_DATA_DIR: /data/legal-agent
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://langfuse-web:3000/api/public/otel
+      LANGFUSE_ENABLED: ${LANGFUSE_ENABLED:-false}
+      LANGFUSE_HOST: ${LANGFUSE_HOST:-http://langfuse-web:3000}
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+      LANGFUSE_PROJECT: ${LANGFUSE_PROJECT:-legal-agent}
+      LEGAL_AGENT_LLM_ENABLED: ${LEGAL_AGENT_LLM_ENABLED:-false}
+      LEGAL_AGENT_LLM_PROVIDER: ${LEGAL_AGENT_LLM_PROVIDER:-openai_compatible}
+      LEGAL_AGENT_LLM_BASE_URL: ${LEGAL_AGENT_LLM_BASE_URL:-}
+      LEGAL_AGENT_LLM_API_KEY: ${LEGAL_AGENT_LLM_API_KEY:-}
+      LEGAL_AGENT_LLM_MODEL: ${LEGAL_AGENT_LLM_MODEL:-}
+      LEGAL_AGENT_LLM_TIMEOUT_SECONDS: ${LEGAL_AGENT_LLM_TIMEOUT_SECONDS:-60}
+      LEGAL_AGENT_LLM_TEMPERATURE: ${LEGAL_AGENT_LLM_TEMPERATURE:-0.2}
+    volumes:
+      - ../agent-runtime:/opt/agent-runtime:ro
+      - shared-data:/data
+    command: ["legal-agent", "worker"]
+
+  rag-worker:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+      temporal:
+        condition: service_started
+    env_file:
+      - .env.example
+    environment:
+      DATABASE_DSN: postgresql://legal_agent:legal_agent@postgres:5432/legal_agent
+      AGENTLEDGER_POSTGRES_DSN: postgresql://legal_agent:legal_agent@postgres:5432/legal_agent
+      TEMPORAL_ADDRESS: temporal:7233
+      TEMPORAL_SEARCH_ATTRIBUTES_ENABLED: ${TEMPORAL_SEARCH_ATTRIBUTES_ENABLED:-true}
+      AGENTLEDGER_SRC: /opt/agent-runtime/src
+      AGENTLEDGER_BLOB_DIR: /data/agentledger/blobs
+      LEGAL_AGENT_DATA_DIR: /data/legal-agent
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://langfuse-web:3000/api/public/otel
+      LANGFUSE_ENABLED: ${LANGFUSE_ENABLED:-false}
+      LANGFUSE_HOST: ${LANGFUSE_HOST:-http://langfuse-web:3000}
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+      LANGFUSE_PROJECT: ${LANGFUSE_PROJECT:-legal-agent}
+    volumes:
+      - ../agent-runtime:/opt/agent-runtime:ro
+      - shared-data:/data
+    command: ["legal-agent", "rag-worker"]
+
+  embedding-worker:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+      temporal:
+        condition: service_started
+    env_file:
+      - .env.example
+    environment:
+      DATABASE_DSN: postgresql://legal_agent:legal_agent@postgres:5432/legal_agent
+      AGENTLEDGER_POSTGRES_DSN: postgresql://legal_agent:legal_agent@postgres:5432/legal_agent
+      TEMPORAL_ADDRESS: temporal:7233
+      TEMPORAL_SEARCH_ATTRIBUTES_ENABLED: ${TEMPORAL_SEARCH_ATTRIBUTES_ENABLED:-true}
+      AGENTLEDGER_SRC: /opt/agent-runtime/src
+      AGENTLEDGER_BLOB_DIR: /data/agentledger/blobs
+      LEGAL_AGENT_DATA_DIR: /data/legal-agent
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://langfuse-web:3000/api/public/otel
+      LANGFUSE_ENABLED: ${LANGFUSE_ENABLED:-false}
+      LANGFUSE_HOST: ${LANGFUSE_HOST:-http://langfuse-web:3000}
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+      LANGFUSE_PROJECT: ${LANGFUSE_PROJECT:-legal-agent}
+    volumes:
+      - ../agent-runtime:/opt/agent-runtime:ro
+      - shared-data:/data
+    command: ["legal-agent", "embedding-worker"]
+
+  rag-ingest:
+    build: .
+    profiles: ["jobs"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file:
+      - .env.example
+    environment:
+      DATABASE_DSN: postgresql://legal_agent:legal_agent@postgres:5432/legal_agent
+      AGENTLEDGER_SRC: /opt/agent-runtime/src
+      LEGAL_AGENT_DATA_DIR: /data/legal-agent
+    volumes:
+      - ../agent-runtime:/opt/agent-runtime:ro
+      - shared-data:/data
+
+  redis:
+    image: redis:7-alpine
+    profiles: ["observability"]
+    command: ["redis-server", "--requirepass", "langfuse"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "langfuse", "ping"]
+      interval: 3s
+      timeout: 5s
+      retries: 10
+
+  minio:
+    image: minio/minio:latest
+    profiles: ["observability"]
+    entrypoint: ["sh", "-c"]
+    command: ["mkdir -p /minio-data/langfuse && minio server /minio-data --console-address ':9001'"]
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+      MINIO_BROWSER: "off"
+    volumes:
+      - shared-data:/minio-data
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:24.8
+    profiles: ["observability"]
+    environment:
+      CLICKHOUSE_DB: langfuse
+      CLICKHOUSE_USER: langfuse
+      CLICKHOUSE_PASSWORD: langfuse
+    volumes:
+      - clickhouse-data:/var/lib/clickhouse
+      - clickhouse-logs:/var/log/clickhouse-server
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8123/ping || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  langfuse-db-init:
+    image: postgres:16-alpine
+    profiles: ["observability"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PGPASSWORD: legal_agent
+    command:
+      [
+        "sh",
+        "-c",
+        "psql -h postgres -U legal_agent -d legal_agent -v ON_ERROR_STOP=1 -c 'CREATE SCHEMA IF NOT EXISTS langfuse AUTHORIZATION legal_agent;'",
+      ]
+
+  langfuse-web:
+    image: langfuse/langfuse:3
+    profiles: ["observability"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      langfuse-db-init:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+      clickhouse:
+        condition: service_healthy
+      minio:
+        condition: service_started
+    environment:
+      DATABASE_URL: postgresql://legal_agent:legal_agent@postgres:5432/legal_agent?schema=langfuse
+      NEXTAUTH_SECRET: dev-nextauth-secret
+      SALT: dev-salt
+      ENCRYPTION_KEY: "0000000000000000000000000000000000000000000000000000000000000000"
+      NEXTAUTH_URL: http://localhost:3001
+      TELEMETRY_ENABLED: "false"
+      REDIS_HOST: redis
+      REDIS_AUTH: langfuse
+      CLICKHOUSE_URL: http://clickhouse:8123
+      CLICKHOUSE_USER: langfuse
+      CLICKHOUSE_PASSWORD: langfuse
+      CLICKHOUSE_DB: langfuse
+      CLICKHOUSE_MIGRATION_URL: clickhouse://clickhouse:9000
+      CLICKHOUSE_CLUSTER_ENABLED: "false"
+      LANGFUSE_S3_EVENT_UPLOAD_BUCKET: langfuse
+      LANGFUSE_S3_EVENT_UPLOAD_PREFIX: events/
+      LANGFUSE_S3_EVENT_UPLOAD_REGION: us-east-1
+      LANGFUSE_S3_EVENT_UPLOAD_ENDPOINT: http://minio:9000
+      LANGFUSE_S3_EVENT_UPLOAD_ACCESS_KEY_ID: minioadmin
+      LANGFUSE_S3_EVENT_UPLOAD_SECRET_ACCESS_KEY: minioadmin
+      LANGFUSE_S3_EVENT_UPLOAD_FORCE_PATH_STYLE: "true"
+      LANGFUSE_S3_MEDIA_UPLOAD_BUCKET: langfuse
+      LANGFUSE_S3_MEDIA_UPLOAD_PREFIX: media/
+      LANGFUSE_S3_MEDIA_UPLOAD_REGION: us-east-1
+      LANGFUSE_S3_MEDIA_UPLOAD_ENDPOINT: http://minio:9000
+      LANGFUSE_S3_MEDIA_UPLOAD_ACCESS_KEY_ID: minioadmin
+      LANGFUSE_S3_MEDIA_UPLOAD_SECRET_ACCESS_KEY: minioadmin
+      LANGFUSE_S3_MEDIA_UPLOAD_FORCE_PATH_STYLE: "true"
+      LANGFUSE_S3_BATCH_EXPORT_BUCKET: langfuse
+      LANGFUSE_S3_BATCH_EXPORT_PREFIX: exports/
+      LANGFUSE_S3_BATCH_EXPORT_REGION: us-east-1
+      LANGFUSE_S3_BATCH_EXPORT_ENDPOINT: http://minio:9000
+      LANGFUSE_S3_BATCH_EXPORT_ACCESS_KEY_ID: minioadmin
+      LANGFUSE_S3_BATCH_EXPORT_SECRET_ACCESS_KEY: minioadmin
+      LANGFUSE_S3_BATCH_EXPORT_FORCE_PATH_STYLE: "true"
+    ports:
+      - "3001:3000"
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://$(hostname):3000/api/public/health || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  langfuse-worker:
+    image: langfuse/langfuse-worker:3
+    profiles: ["observability"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      langfuse-db-init:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+      clickhouse:
+        condition: service_healthy
+      minio:
+        condition: service_started
+      langfuse-web:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://legal_agent:legal_agent@postgres:5432/legal_agent?schema=langfuse
+      SALT: dev-salt
+      ENCRYPTION_KEY: "0000000000000000000000000000000000000000000000000000000000000000"
+      NEXTAUTH_URL: http://localhost:3001
+      TELEMETRY_ENABLED: "false"
+      REDIS_HOST: redis
+      REDIS_AUTH: langfuse
+      CLICKHOUSE_URL: http://clickhouse:8123
+      CLICKHOUSE_USER: langfuse
+      CLICKHOUSE_PASSWORD: langfuse
+      CLICKHOUSE_DB: langfuse
+      CLICKHOUSE_MIGRATION_URL: clickhouse://clickhouse:9000
+      CLICKHOUSE_CLUSTER_ENABLED: "false"
+      LANGFUSE_S3_EVENT_UPLOAD_BUCKET: langfuse
+      LANGFUSE_S3_EVENT_UPLOAD_PREFIX: events/
+      LANGFUSE_S3_EVENT_UPLOAD_REGION: us-east-1
+      LANGFUSE_S3_EVENT_UPLOAD_ENDPOINT: http://minio:9000
+      LANGFUSE_S3_EVENT_UPLOAD_ACCESS_KEY_ID: minioadmin
+      LANGFUSE_S3_EVENT_UPLOAD_SECRET_ACCESS_KEY: minioadmin
+      LANGFUSE_S3_EVENT_UPLOAD_FORCE_PATH_STYLE: "true"
+      LANGFUSE_S3_MEDIA_UPLOAD_BUCKET: langfuse
+      LANGFUSE_S3_MEDIA_UPLOAD_PREFIX: media/
+      LANGFUSE_S3_MEDIA_UPLOAD_REGION: us-east-1
+      LANGFUSE_S3_MEDIA_UPLOAD_ENDPOINT: http://minio:9000
+      LANGFUSE_S3_MEDIA_UPLOAD_ACCESS_KEY_ID: minioadmin
+      LANGFUSE_S3_MEDIA_UPLOAD_SECRET_ACCESS_KEY: minioadmin
+      LANGFUSE_S3_MEDIA_UPLOAD_FORCE_PATH_STYLE: "true"
+      LANGFUSE_S3_BATCH_EXPORT_BUCKET: langfuse
+      LANGFUSE_S3_BATCH_EXPORT_PREFIX: exports/
+      LANGFUSE_S3_BATCH_EXPORT_REGION: us-east-1
+      LANGFUSE_S3_BATCH_EXPORT_ENDPOINT: http://minio:9000
+      LANGFUSE_S3_BATCH_EXPORT_ACCESS_KEY_ID: minioadmin
+      LANGFUSE_S3_BATCH_EXPORT_SECRET_ACCESS_KEY: minioadmin
+      LANGFUSE_S3_BATCH_EXPORT_FORCE_PATH_STYLE: "true"
+
+volumes:
+  postgres-data:
+  shared-data:
+  clickhouse-data:
+  clickhouse-logs:

@@ -1,0 +1,38 @@
+from __future__ import annotations
+
+from enum import StrEnum
+
+
+class RunStatus(StrEnum):
+    CREATED = "CREATED"
+    RUNNING = "RUNNING"
+    WAITING_USER_INPUT = "WAITING_USER_INPUT"
+    WAITING_APPROVAL = "WAITING_APPROVAL"
+    COMPLETED = "COMPLETED"
+    FAILED = "FAILED"
+    CANCELLED = "CANCELLED"
+    EXPIRED = "EXPIRED"
+    APPROVAL_REJECTED = "APPROVAL_REJECTED"
+
+
+class NodeName(StrEnum):
+    CLASSIFY = "CLASSIFY"
+    FACT_CHECK = "FACT_CHECK"
+    ASK_USER = "ASK_USER"
+    PLAN = "PLAN"
+    RETRIEVE = "RETRIEVE"
+    TOOL = "TOOL"
+    DRAFT = "DRAFT"
+    REVIEW = "REVIEW"
+    APPROVAL = "APPROVAL"
+    OUTPUT = "OUTPUT"
+
+
+class NodeStatus(StrEnum):
+    PENDING = "PENDING"
+    RUNNING = "RUNNING"
+    WAITING = "WAITING"
+    SUCCEEDED = "SUCCEEDED"
+    RETRYING = "RETRYING"
+    FAILED = "FAILED"
+    SKIPPED = "SKIPPED"

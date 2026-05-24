@@ -1,0 +1,63 @@
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+secrets/
+.secrets/
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.token
+*.secret
+credentials.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.python-version
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pyre/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+dist/
+build/
+*.egg-info/
+
+# Runtime data and generated reports
+.data/
+data/
+evaluation-reports/
+logs/
+*.log
+*.tmp
+*.db
+*.sqlite
+*.sqlite3
+tmp/
+
+# Local Docker overrides
+docker-compose.override.yml
+
+# Frontend / Node tooling, if added locally
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editors and OS metadata
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo

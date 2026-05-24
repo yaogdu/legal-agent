@@ -1,0 +1,124 @@
+version: 0.1
+domain: labor_dispute
+purpose: "Structured retrieval metadata for the local demo RAG snapshots. The workflow reads these fields instead of inferring legal support in code."
+
+chunks:
+  中华人民共和国劳动合同法#第十条:
+    supported_claim: "建立劳动关系应订立书面劳动合同，未及时订立时需要核对未签劳动合同责任。"
+    claim_tags: ["labor_contract", "written_contract", "employment_relationship"]
+
+  中华人民共和国劳动合同法#第三十八条:
+    supported_claim: "未及时足额支付劳动报酬等情形可能支持劳动者解除劳动合同及相关请求。"
+    claim_tags: ["termination", "unpaid_wage", "employee_resignation"]
+
+  中华人民共和国劳动合同法#第四十六条:
+    supported_claim: "符合解除或终止情形时，劳动者可能主张经济补偿。"
+    claim_tags: ["economic_compensation", "termination"]
+
+  中华人民共和国劳动合同法#第四十七条:
+    supported_claim: "经济补偿金额需要结合工作年限、月工资和法定计算口径核算。"
+    claim_tags: ["amount_calculation", "economic_compensation"]
+
+  中华人民共和国劳动合同法#第四十八条:
+    supported_claim: "违法解除或终止劳动合同可能支持继续履行或赔偿责任相关请求。"
+    claim_tags: ["illegal_termination", "damages"]
+
+  中华人民共和国劳动合同法#第八十二条:
+    supported_claim: "超过法定期间未订立书面劳动合同，劳动者可能主张未签书面劳动合同相关责任。"
+    claim_tags: ["double_salary", "written_contract"]
+
+  中华人民共和国劳动争议调解仲裁法#第二条:
+    supported_claim: "确认劳动关系、劳动报酬、经济补偿和赔偿金等争议属于劳动争议处理范围。"
+    claim_tags: ["arbitration_scope", "labor_remuneration", "compensation"]
+
+  中华人民共和国劳动争议调解仲裁法#第六条:
+    supported_claim: "当事人应围绕主张提交证据，用人单位掌握管理的证据应依法提供。"
+    claim_tags: ["evidence", "burden_of_proof"]
+
+  中华人民共和国劳动争议调解仲裁法#第二十七条:
+    supported_claim: "劳动争议仲裁通常受一年时效限制，起算和中断中止需要结合案件事实复核。"
+    claim_tags: ["limitation_period", "risk_notice"]
+
+  中华人民共和国劳动争议调解仲裁法#第二十八条:
+    supported_claim: "劳动仲裁申请书应载明当事人信息、仲裁请求、事实理由、证据和证据来源等内容。"
+    claim_tags: ["document_format", "arbitration_application"]
+
+  中华人民共和国劳动争议调解仲裁法#第二十九条:
+    supported_claim: "仲裁申请是否受理需要结合管辖、主体、请求和材料等条件审查。"
+    claim_tags: ["jurisdiction", "acceptance_review"]
+
+  工资支付暂行规定#第六条:
+    supported_claim: "工资支付记录、工资条、银行流水等材料可支持工资支付事实核验。"
+    claim_tags: ["wage_record", "evidence"]
+
+  工资支付暂行规定#第七条:
+    supported_claim: "工资应按约定日期支付，可用于识别工资拖欠时间点和拖欠期间。"
+    claim_tags: ["wage_payment_date", "unpaid_wage"]
+
+  工资支付暂行规定#第九条:
+    supported_claim: "解除或终止劳动合同时，用人单位应结清劳动者工资。"
+    claim_tags: ["termination", "wage_settlement"]
+
+  工资支付暂行规定#第十八条:
+    supported_claim: "克扣或无故拖欠工资可能涉及责令支付工资、经济补偿或赔偿金。"
+    claim_tags: ["unpaid_wage", "administrative_remedy"]
+
+  劳动人事争议仲裁申请书模板#sections:
+    supported_claim: "劳动仲裁申请书应包含申请人、被申请人、仲裁请求、事实与理由、证据和日期等栏目。"
+    claim_tags: ["document_template", "section_check"]
+
+  劳动人事争议仲裁申请书模板#applicant:
+    supported_claim: "申请人姓名、身份证号、联系电话和住址等字段缺失时应提示补充。"
+    claim_tags: ["document_template", "applicant_fields"]
+
+  劳动人事争议仲裁申请书模板#respondent:
+    supported_claim: "被申请人名称、统一社会信用代码、负责人和地址等字段缺失时应提示补充。"
+    claim_tags: ["document_template", "respondent_fields"]
+
+  劳动人事争议仲裁申请书模板#claims_and_facts:
+    supported_claim: "仲裁请求和事实理由应围绕金额、期间、劳动关系、欠付事实和解除事实组织。"
+    claim_tags: ["document_template", "claims", "facts"]
+
+  case_overtime_settlement_confirmation#summary:
+    case_id: "case_overtime_settlement_confirmation"
+    case_title: "离职结清确认与加班费追索争议典型案例摘要"
+    court: "人民法院"
+    summary: "离职结清或交接确认不能当然排除劳动报酬请求，需要结合真实意思表示、考勤和工资支付证据综合判断。"
+    issue: "离职确认已结清后，劳动者能否继续追索加班费或工资。"
+    holding: "不能仅凭格式化结清表免除用人单位依法支付劳动报酬的举证和支付责任。"
+    result: "作为类案参考，用于提示补充考勤、工资支付和离职协商证据。"
+    supported_claim: "离职结清确认与工资、加班费追索之间存在证据审查空间，不能简单视为当然放弃权利。"
+    claim_tags: ["case_search", "overtime_pay", "wage_payment", "settlement_confirmation"]
+
+  case_labor_arbitration_limitation_period#summary:
+    case_id: "case_labor_arbitration_limitation_period"
+    case_title: "劳动争议仲裁时效抗辩典型案例摘要"
+    court: "人民法院"
+    summary: "劳动争议请求需要结合请求类型、权利受侵害时间、主张权利证据和特别规则审查仲裁时效。"
+    issue: "欠薪、未签劳动合同二倍工资或解除补偿请求是否超过仲裁时效。"
+    holding: "时效判断不能脱离请求类型和案件事实，应提示用户补充主张权利和离职结算证据。"
+    result: "作为类案参考，用于生成风险提示。"
+    supported_claim: "劳动争议请求存在仲裁时效风险，需要结合请求类型和事实证据复核。"
+    claim_tags: ["case_search", "limitation_period", "risk_notice"]
+
+  case_platform_delivery_labor_relation#summary:
+    case_id: "case_platform_delivery_labor_relation"
+    case_title: "新就业形态配送从业者劳动关系认定典型案例摘要"
+    court: "人民法院"
+    summary: "新就业形态劳动关系认定应结合实际管理、持续劳动给付、报酬结算和从属性综合判断。"
+    issue: "协议名称为合作或服务时，是否仍可能成立劳动关系。"
+    holding: "不能仅凭协议名称否定劳动关系，关键在于实际履行中的管理控制和从属性。"
+    result: "作为类案参考，用于提示补充平台规则、派单记录、考核记录和收入流水。"
+    supported_claim: "新就业形态下劳动关系认定应重视实际管理控制和从属性，而不是只看合同名称。"
+    claim_tags: ["case_search", "new_employment", "labor_relationship", "platform_work"]
+
+  case_platform_driver_management_control#summary:
+    case_id: "case_platform_driver_management_control"
+    case_title: "平台或合作企业管理控制下劳动关系认定典型案例摘要"
+    court: "人民法院"
+    summary: "平台派单、考核、奖惩和收入结算规则可能影响劳动关系从属性判断。"
+    issue: "平台、承包商或合作企业是否通过规则和考核形成劳动管理。"
+    holding: "若实际用工体现较强管理控制和持续劳动给付，应审查是否构成劳动关系。"
+    result: "作为类案参考，用于提示补充派单、考核、处罚、工作时长和收入流水材料。"
+    supported_claim: "平台规则和管理控制可能支持劳动关系或用工责任认定，需要结合实际履行证据判断。"
+    claim_tags: ["case_search", "new_employment", "management_control", "labor_relationship"]

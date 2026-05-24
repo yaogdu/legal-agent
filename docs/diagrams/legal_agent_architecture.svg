@@ -1,0 +1,270 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1220" viewBox="0 0 1800 1220">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#edf6ff"/>
+    </linearGradient>
+    <linearGradient id="workerA" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#047857"/>
+      <stop offset="100%" stop-color="#0f766e"/>
+    </linearGradient>
+    <linearGradient id="workerB" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1d4ed8"/>
+      <stop offset="100%" stop-color="#0f766e"/>
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-7%" width="110%" height="120%">
+      <feDropShadow dx="0" dy="9" stdDeviation="12" flood-color="#0f172a" flood-opacity="0.10"/>
+    </filter>
+    <filter id="softShadow" x="-7%" y="-9%" width="114%" height="124%">
+      <feDropShadow dx="0" dy="5" stdDeviation="8" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+    <marker id="arrowDark" markerWidth="16" markerHeight="16" refX="13" refY="8" orient="auto">
+      <path d="M3,3 L13,8 L3,13 Z" fill="#334155"/>
+    </marker>
+    <marker id="arrowBlue" markerWidth="16" markerHeight="16" refX="13" refY="8" orient="auto">
+      <path d="M3,3 L13,8 L3,13 Z" fill="#2563eb"/>
+    </marker>
+    <marker id="arrowGreen" markerWidth="16" markerHeight="16" refX="13" refY="8" orient="auto">
+      <path d="M3,3 L13,8 L3,13 Z" fill="#059669"/>
+    </marker>
+    <marker id="arrowRed" markerWidth="16" markerHeight="16" refX="13" refY="8" orient="auto">
+      <path d="M3,3 L13,8 L3,13 Z" fill="#dc2626"/>
+    </marker>
+    <style>
+      text{font-family:Arial,"PingFang SC","Microsoft YaHei",sans-serif;letter-spacing:0}
+      .title{font-size:38px;font-weight:800;fill:#0f172a}
+      .subtitle{font-size:18px;fill:#475569}
+      .section{font-size:22px;font-weight:800;fill:#0f172a}
+      .label{font-size:16px;font-weight:800;fill:#0f172a}
+      .body{font-size:13px;fill:#64748b}
+      .small{font-size:12px;fill:#64748b}
+      .tiny{font-size:11px;fill:#94a3b8}
+      .mono{font-family:Menlo,Consolas,monospace;font-size:12px;fill:#475569}
+      .whiteTitle{font-size:19px;font-weight:800;fill:#fff}
+      .whiteBody{font-size:13px;fill:#dbeafe}
+      .panel{fill:#fff;stroke:#d8e1ec;stroke-width:1.4;rx:26;filter:url(#shadow)}
+      .lane{fill:#f8fafc;stroke:#e2e8f0;stroke-width:1.1;rx:18}
+      .card{fill:#fff;stroke:#d8e1ec;stroke-width:1.25;rx:16;filter:url(#softShadow)}
+      .blue{fill:#eff6ff;stroke:#bfdbfe;stroke-width:1.35;rx:16;filter:url(#softShadow)}
+      .green{fill:#ecfdf5;stroke:#a7f3d0;stroke-width:1.35;rx:16;filter:url(#softShadow)}
+      .amber{fill:#fffbeb;stroke:#fde68a;stroke-width:1.35;rx:16;filter:url(#softShadow)}
+      .red{fill:#fef2f2;stroke:#fecaca;stroke-width:1.35;rx:16;filter:url(#softShadow)}
+      .gray{fill:#f8fafc;stroke:#cbd5e1;stroke-width:1.15;rx:14}
+      .pill{fill:#f8fafc;stroke:#cbd5e1;stroke-width:1.1;rx:13}
+      .pillBlue{fill:#eff6ff;stroke:#bfdbfe;stroke-width:1.1;rx:13}
+      .pillGreen{fill:#ecfdf5;stroke:#a7f3d0;stroke-width:1.1;rx:13}
+      .line{stroke:#334155;stroke-width:2;fill:none;marker-end:url(#arrowDark)}
+      .lineBlue{stroke:#2563eb;stroke-width:2.2;fill:none;marker-end:url(#arrowBlue)}
+      .lineGreen{stroke:#059669;stroke-width:2.2;fill:none;marker-end:url(#arrowGreen)}
+      .lineRed{stroke:#dc2626;stroke-width:2.2;fill:none;marker-end:url(#arrowRed)}
+      .dash{stroke:#94a3b8;stroke-width:1.7;stroke-dasharray:7 7;fill:none;marker-end:url(#arrowDark)}
+      .dashGreen{stroke:#059669;stroke-width:1.8;stroke-dasharray:7 7;fill:none;marker-end:url(#arrowGreen)}
+      .dashRed{stroke:#dc2626;stroke-width:1.8;stroke-dasharray:7 7;fill:none;marker-end:url(#arrowRed)}
+      .badge{font-size:12px;font-weight:800;fill:#fff}
+      .laneName{font-size:15px;font-weight:800;fill:#334155}
+    </style>
+  </defs>
+
+  <rect width="1800" height="1220" fill="url(#bg)"/>
+
+  <text x="60" y="66" class="title">Legal Agent: 调用、调度、恢复</text>
+  <text x="62" y="100" class="subtitle">主图只看运行链路；右侧只放术语映射。Temporal 管任务完成状态，AgentLedger 管业务上下文。</text>
+
+  <!-- Main canvas -->
+  <g transform="translate(45 130)">
+    <rect class="panel" width="1285" height="1010"/>
+    <text x="30" y="44" class="section">主流程：一次 run 如何被调度、执行、存储、恢复</text>
+    <text x="30" y="72" class="body">蓝色是用户/API 和业务状态读写；绿色是 Temporal 调度；红色是失败恢复路径。</text>
+
+    <!-- Layer 1 -->
+    <g transform="translate(30 100)">
+      <rect class="lane" width="1225" height="130"/>
+      <text x="22" y="34" class="laneName">Layer 1 - 入口 / API</text>
+      <g transform="translate(160 28)">
+        <rect class="blue" width="240" height="78"/>
+        <circle cx="28" cy="28" r="15" fill="#2563eb"/><text x="24" y="33" class="badge">1</text>
+        <text x="58" y="34" class="label">UI / API Client</text>
+        <text x="24" y="60" class="body">提交需求，查询 run 状态</text>
+      </g>
+      <g transform="translate(610 28)">
+        <rect class="blue" width="250" height="78"/>
+        <circle cx="28" cy="28" r="15" fill="#2563eb"/><text x="24" y="33" class="badge">2</text>
+        <text x="58" y="34" class="label">FastAPI</text>
+        <text x="24" y="60" class="body">创建 run_id，start / signal workflow</text>
+      </g>
+      <path class="lineBlue" d="M400 67 L610 67"/>
+      <text x="455" y="51" class="tiny">input / approval / facts</text>
+    </g>
+
+    <!-- Layer 2 -->
+    <g transform="translate(30 255)">
+      <rect class="lane" width="1225" height="185"/>
+      <text x="22" y="34" class="laneName">Layer 2 - Temporal 调度状态</text>
+      <g transform="translate(115 56)">
+        <rect class="green" width="250" height="88"/>
+        <circle cx="28" cy="28" r="15" fill="#059669"/><text x="24" y="33" class="badge">3</text>
+        <text x="58" y="34" class="label">Workflow Definition</text>
+        <text x="24" y="60" class="body">业务代码用 Temporal SDK 定义顺序</text>
+        <text x="24" y="78" class="small">classify -> draft -> review ...</text>
+      </g>
+      <g transform="translate(475 56)">
+        <rect class="green" width="240" height="88"/>
+        <circle cx="28" cy="28" r="15" fill="#059669"/><text x="24" y="33" class="badge">4</text>
+        <text x="58" y="34" class="label">Event History</text>
+        <text x="24" y="60" class="body">ActivityStarted / Completed</text>
+        <text x="24" y="78" class="small">timeout / retry / signal / timer</text>
+      </g>
+      <g transform="translate(820 56)">
+        <rect class="amber" width="240" height="88"/>
+        <circle cx="28" cy="28" r="15" fill="#b45309"/><text x="24" y="33" class="badge">5</text>
+        <text x="58" y="34" class="label">Task Queue</text>
+        <text x="24" y="60" class="body">投递 Activity 给任意 Worker</text>
+        <text x="24" y="78" class="small">legal-agent-worker-dev</text>
+      </g>
+      <path class="lineGreen" d="M365 100 L475 100"/>
+      <path class="lineGreen" d="M715 100 L820 100"/>
+      <text x="730" y="84" class="tiny">schedule activity</text>
+    </g>
+
+    <!-- Layer 3 -->
+    <g transform="translate(30 465)">
+      <rect class="lane" width="1225" height="250"/>
+      <text x="22" y="34" class="laneName">Layer 3 - Agent Worker 执行业务 Activity</text>
+      <g transform="translate(120 70)">
+        <rect width="240" height="130" rx="18" fill="url(#workerA)" filter="url(#softShadow)"/>
+        <circle cx="30" cy="30" r="15" fill="#fff" fill-opacity="0.24"/><text x="26" y="35" class="badge">6</text>
+        <text x="60" y="36" class="whiteTitle">Worker A</text>
+        <text x="24" y="70" class="whiteBody">poll task queue</text>
+        <text x="24" y="94" class="whiteBody">execute draft_activity</text>
+        <text x="24" y="118" class="whiteBody">Agent logic + LLM/RAG</text>
+      </g>
+      <g transform="translate(492 58)">
+        <rect class="red" width="260" height="96"/>
+        <circle cx="28" cy="28" r="15" fill="#dc2626"/><text x="24" y="33" class="badge">7</text>
+        <text x="58" y="34" class="label">Crash Point</text>
+        <text x="24" y="62" class="body">Worker A 挂掉</text>
+        <text x="24" y="80" class="small">Temporal 没收到 ActivityCompleted</text>
+      </g>
+      <g transform="translate(900 70)">
+        <rect width="230" height="130" rx="18" fill="url(#workerB)" filter="url(#softShadow)"/>
+        <circle cx="30" cy="30" r="15" fill="#fff" fill-opacity="0.24"/><text x="26" y="35" class="badge">8</text>
+        <text x="60" y="36" class="whiteTitle">Worker B</text>
+        <text x="24" y="70" class="whiteBody">receives retry</text>
+        <text x="24" y="94" class="whiteBody">read by run_id</text>
+        <text x="24" y="118" class="whiteBody">finish same Activity</text>
+      </g>
+      <path class="lineGreen" d="M790 -225 L790 68 L900 102"/>
+      <text x="790" y="58" class="tiny">normal poll or retry</text>
+      <path class="lineRed" d="M360 128 L492 104"/>
+      <path class="dashRed" d="M622 58 C610 6, 575 -52, 595 -116"/>
+      <text x="628" y="24" class="tiny">timeout / retry policy</text>
+      <path class="lineGreen" d="M752 106 C805 106, 845 106, 900 106"/>
+      <text x="774" y="91" class="tiny">same activity, same run_id</text>
+    </g>
+
+    <!-- Layer 4 -->
+    <g transform="translate(30 745)">
+      <rect class="lane" width="1225" height="215"/>
+      <text x="22" y="34" class="laneName">Layer 4 - 业务存储 / 恢复上下文</text>
+      <g transform="translate(120 64)">
+        <rect class="blue" width="360" height="104"/>
+        <text x="24" y="32" class="label">AgentLedger / Postgres</text>
+        <text x="24" y="58" class="body">current_node, facts, outputs, approvals</text>
+        <text x="24" y="80" class="small">audit trail, idempotency keys</text>
+      </g>
+      <g transform="translate(570 64)">
+        <rect class="gray" width="250" height="104"/>
+        <text x="24" y="32" class="label">Artifacts / Local Path</text>
+        <text x="24" y="58" class="body">draft docs, markdown, JSON</text>
+        <text x="24" y="80" class="small">只存引用到 AgentLedger</text>
+      </g>
+      <g transform="translate(905 64)">
+        <rect class="blue" width="230" height="104"/>
+        <text x="24" y="32" class="label">Status Projection</text>
+        <text x="24" y="58" class="body">UI 看到的状态</text>
+        <text x="24" y="80" class="small">不是 Temporal Event History</text>
+      </g>
+    </g>
+
+    <!-- Cross-layer arrows -->
+    <path class="lineBlue" d="M765 230 L235 311"/>
+    <text x="420" y="252" class="tiny">start workflow with run_id</text>
+    <path class="lineGreen" d="M970 440 L300 535"/>
+    <text x="602" y="465" class="tiny">Activity task</text>
+    <path class="lineBlue" d="M250 665 L250 809"/>
+    <text x="263" y="746" class="tiny">write progress before side effects</text>
+    <path class="dashGreen" d="M1050 665 C1010 760, 540 760, 380 809"/>
+    <text x="665" y="748" class="tiny">read context by run_id before retry side effects</text>
+    <path class="lineGreen" d="M1018 665 C980 716, 950 766, 950 809"/>
+    <text x="980" y="744" class="tiny">write final result</text>
+    <path class="lineGreen" d="M1030 535 C1100 465, 610 412, 595 399"/>
+    <text x="910" y="485" class="tiny">ActivityCompleted</text>
+    <path class="dash" d="M965 913 C705 996, 205 956, 188 230"/>
+    <text x="360" y="998" class="small">UI 查询 run 状态：读 AgentLedger/Postgres 的业务投影。</text>
+
+    <g transform="translate(54 966)">
+      <rect class="amber" width="1135" height="34"/>
+      <text x="18" y="23" class="small">恢复边界：Temporal 只能决定“哪个 Activity 需要重试”；Agent 代码必须用 AgentLedger/Postgres/Artifacts 恢复业务上下文并保证幂等。</text>
+    </g>
+  </g>
+
+  <!-- Right glossary -->
+  <g transform="translate(1360 130)">
+    <rect class="panel" width="390" height="1010"/>
+    <text x="28" y="44" class="section">右侧图例</text>
+    <text x="28" y="72" class="body">先看左侧主流程；这里解释符号和术语。</text>
+
+    <g transform="translate(28 104)">
+      <rect class="card" width="334" height="190"/>
+      <text x="22" y="32" class="label">线条含义</text>
+      <path class="lineBlue" d="M24 62 L112 62"/>
+      <text x="132" y="66" class="small">用户/API 与业务状态读写</text>
+      <path class="lineGreen" d="M24 94 L112 94"/>
+      <text x="132" y="98" class="small">Temporal 调度 / Activity 完成</text>
+      <path class="lineRed" d="M24 126 L112 126"/>
+      <text x="132" y="130" class="small">失败 / crash 路径</text>
+      <path class="dashGreen" d="M24 158 L112 158"/>
+      <text x="132" y="162" class="small">恢复时读取上下文</text>
+      <path class="dash" d="M24 178 L112 178"/>
+      <text x="132" y="182" class="small">查询 / 观察，不推进流程</text>
+    </g>
+
+    <g transform="translate(28 322)">
+      <rect class="card" width="334" height="212"/>
+      <text x="22" y="32" class="label">执行顺序</text>
+      <text x="22" y="60" class="small">1 UI 提交需求或查询状态</text>
+      <text x="22" y="82" class="small">2 FastAPI 创建 run_id，启动 workflow</text>
+      <text x="22" y="104" class="small">3 Workflow 进入业务步骤编排</text>
+      <text x="22" y="126" class="small">4 Event History 记录调度事件</text>
+      <text x="22" y="148" class="small">5 Task Queue 分发 Activity</text>
+      <text x="22" y="170" class="small">6 Worker A 开始执行 draft_activity</text>
+      <text x="22" y="192" class="small">7 Worker A crash，Temporal 未收到完成事件</text>
+    </g>
+
+    <g transform="translate(28 552)">
+      <rect class="green" width="334" height="54"/>
+      <text x="22" y="34" class="small">8 Worker B 接到同一个 Activity，读上下文后完成</text>
+    </g>
+
+    <g transform="translate(28 630)">
+      <rect class="card" width="334" height="152"/>
+      <text x="22" y="32" class="label">术语映射</text>
+      <text x="22" y="60" class="body">Agent Step</text>
+      <text x="34" y="80" class="small">classify / draft / review：业务阶段</text>
+      <text x="22" y="108" class="body">Temporal Activity</text>
+      <text x="34" y="128" class="small">draft_activity(run_id)：可重试函数</text>
+    </g>
+
+    <g transform="translate(28 806)">
+      <rect class="card" width="334" height="166"/>
+      <text x="22" y="32" class="label">谁记录什么</text>
+      <text x="22" y="60" class="body">Temporal Event History</text>
+      <text x="34" y="82" class="small">ActivityStarted / ActivityCompleted</text>
+      <text x="34" y="102" class="small">timeout / retry / signal / timer</text>
+      <text x="22" y="130" class="body">AgentLedger / Postgres</text>
+      <text x="34" y="150" class="small">current_node / facts / outputs / audit</text>
+    </g>
+  </g>
+
+  <text x="58" y="1182" class="small">结论：Temporal 负责可靠重试和调度，Agent 负责业务步骤执行，AgentLedger/Postgres/Artifacts 负责恢复业务上下文。</text>
+</svg>
