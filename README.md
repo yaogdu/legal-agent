@@ -1,5 +1,7 @@
 # Legal Agent / 法律 Agent
 
+[English README](README.en.md) | 中文/双语 README
+
 Legal Agent 是一个自托管的劳动争议法律 Agent Demo。它从用户的一段自然语言描述开始，识别诉求和缺失事实，检索本地法律知识库，计算劳动争议相关金额，生成法律文书草稿，等待人工审批，并把每一步执行记录成可审计、可恢复的运行账本。
 
 Legal Agent is a self-hosted labor-dispute legal-agent demo. It starts from a free-form user request, extracts claims and missing facts, retrieves local legal knowledge, calculates labor claims, drafts legal documents, waits for human approval, and records each step as an auditable and recoverable runtime ledger.
