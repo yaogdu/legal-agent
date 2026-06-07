@@ -25,7 +25,28 @@ for i in $(seq 1 20); do
   sleep 2
 done
 
-docker compose up -d --scale legal-agent-worker="$WORKERS" --scale rag-worker="$RAG_WORKERS" --scale embedding-worker="$EMBEDDING_WORKERS"
+docker compose up -d temporal-ui legal-agent-api
+
+if [[ "$PROFILE" == "full" ]]; then
+  docker compose up -d redis minio clickhouse
+  for i in $(seq 1 30); do
+    if docker inspect legal-agent-clickhouse-1 --format '{{if .State.Health}}{{.State.Health.Status}}{{end}}' 2>/dev/null | grep -q healthy; then
+      break
+    fi
+    sleep 2
+  done
+  docker compose up -d langfuse-db-init
+  docker compose up -d langfuse-web
+  for i in $(seq 1 30); do
+    if docker inspect legal-agent-langfuse-web-1 --format '{{if .State.Health}}{{.State.Health.Status}}{{end}}' 2>/dev/null | grep -q healthy; then
+      break
+    fi
+    sleep 2
+  done
+  docker compose up -d langfuse-worker
+fi
+
+docker compose up -d --scale legal-agent-worker="$WORKERS" --scale rag-worker="$RAG_WORKERS" --scale embedding-worker="$EMBEDDING_WORKERS" legal-agent-worker rag-worker embedding-worker
 
 echo ""
 echo "api:          http://localhost:28080"

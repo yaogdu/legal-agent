@@ -903,6 +903,9 @@
                 <div class="inline">
                   <button id="loadAuditBtn" type="button" disabled>Load Audit</button>
                   <button id="loadReplayBtn" type="button" disabled>Load Replay</button>
+                  <button id="loadInspectorBtn" type="button" disabled>Load Inspector</button>
+                  <button id="openInspectorBtn" type="button" disabled>Open Inspector HTML</button>
+                  <button id="openInspectorRunsBtn" type="button">Open Inspector Runs</button>
                 </div>
                 <div style="height: 12px"></div>
                 <pre id="auditBox" class="json">{}</pre>
@@ -1271,6 +1274,8 @@
         $("#cancelBtn").disabled = !canMutate;
         $("#loadAuditBtn").disabled = !run.run_id;
         $("#loadReplayBtn").disabled = !run.run_id;
+        $("#loadInspectorBtn").disabled = !run.run_id;
+        $("#openInspectorBtn").disabled = !run.run_id;
       }
 
       async function uploadFiles(files) {
@@ -1532,13 +1537,22 @@
 
       async function loadJson(kind) {
         if (!state.selectedRunId) return;
-        const path = kind === "audit" ? "audit" : "replay";
+        const path = kind === "audit" ? "audit" : kind === "inspector" ? "inspector" : "replay";
         try {
           const data = await api(`/api/v1/legal-agent/runs/${state.selectedRunId}/${path}`);
           $("#auditBox").textContent = JSON.stringify(data, null, 2);
         } catch (error) {
           toast(error.message, "error");
         }
+      }
+
+      function openInspectorHtml() {
+        if (!state.selectedRunId) return;
+        window.open(`/api/v1/legal-agent/runs/${state.selectedRunId}/inspector.html`, "_blank", "noopener,noreferrer");
+      }
+
+      function openInspectorRunsHtml() {
+        window.open("/api/v1/legal-agent/agentledger/runs.html", "_blank", "noopener,noreferrer");
       }
 
       async function cancelRun() {
@@ -1595,6 +1609,9 @@
         $("#cancelBtn").addEventListener("click", cancelRun);
         $("#loadAuditBtn").addEventListener("click", () => loadJson("audit"));
         $("#loadReplayBtn").addEventListener("click", () => loadJson("replay"));
+        $("#loadInspectorBtn").addEventListener("click", () => loadJson("inspector"));
+        $("#openInspectorBtn").addEventListener("click", openInspectorHtml);
+        $("#openInspectorRunsBtn").addEventListener("click", openInspectorRunsHtml);
 
         await checkHealth();
         await loadRuns();

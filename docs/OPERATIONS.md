@@ -118,7 +118,6 @@ Important variables:
 | --- | --- |
 | `DATABASE_DSN` | Application PostgreSQL connection string. / 应用数据库连接串。 |
 | `AGENTLEDGER_POSTGRES_DSN` | AgentLedger PostgreSQL connection string. / AgentLedger 数据库连接串。 |
-| `AGENTLEDGER_SRC` | Path to AgentLedger source inside the container. / 容器内 AgentLedger 源码路径。 |
 | `AGENTLEDGER_BLOB_DIR` | Blob artifact storage path. / Blob artifact 存储路径。 |
 | `LEGAL_AGENT_DATA_DIR` | Application data path. / 应用数据路径。 |
 | `TEMPORAL_ADDRESS` | Temporal server address. / Temporal 服务地址。 |

@@ -1,0 +1,30 @@
+services:
+  legal-agent-api:
+    environment:
+      PYTHONPATH: /app/src:/opt/agent-runtime/src:/opt/agent-runtime/packages/agentledger-inspector/src
+    volumes:
+      - /Users/duyaoguang/Documents/agents/agent-runtime:/opt/agent-runtime:ro
+
+  legal-agent-worker:
+    environment:
+      PYTHONPATH: /app/src:/opt/agent-runtime/src:/opt/agent-runtime/packages/agentledger-inspector/src
+    volumes:
+      - /Users/duyaoguang/Documents/agents/agent-runtime:/opt/agent-runtime:ro
+
+  rag-worker:
+    environment:
+      PYTHONPATH: /app/src:/opt/agent-runtime/src:/opt/agent-runtime/packages/agentledger-inspector/src
+    volumes:
+      - /Users/duyaoguang/Documents/agents/agent-runtime:/opt/agent-runtime:ro
+
+  embedding-worker:
+    environment:
+      PYTHONPATH: /app/src:/opt/agent-runtime/src:/opt/agent-runtime/packages/agentledger-inspector/src
+    volumes:
+      - /Users/duyaoguang/Documents/agents/agent-runtime:/opt/agent-runtime:ro
+
+  rag-ingest:
+    environment:
+      PYTHONPATH: /app/src:/opt/agent-runtime/src:/opt/agent-runtime/packages/agentledger-inspector/src
+    volumes:
+      - /Users/duyaoguang/Documents/agents/agent-runtime:/opt/agent-runtime:ro

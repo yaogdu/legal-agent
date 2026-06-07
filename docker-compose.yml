@@ -53,7 +53,6 @@ services:
       AGENTLEDGER_POSTGRES_DSN: postgresql://legal_agent:legal_agent@postgres:5432/legal_agent
       TEMPORAL_ADDRESS: temporal:7233
       TEMPORAL_SEARCH_ATTRIBUTES_ENABLED: ${TEMPORAL_SEARCH_ATTRIBUTES_ENABLED:-true}
-      AGENTLEDGER_SRC: /opt/agent-runtime/src
       AGENTLEDGER_BLOB_DIR: /data/agentledger/blobs
       LEGAL_AGENT_DATA_DIR: /data/legal-agent
       OTEL_EXPORTER_OTLP_ENDPOINT: http://langfuse-web:3000/api/public/otel
@@ -70,7 +69,6 @@ services:
       LEGAL_AGENT_LLM_TIMEOUT_SECONDS: ${LEGAL_AGENT_LLM_TIMEOUT_SECONDS:-60}
       LEGAL_AGENT_LLM_TEMPERATURE: ${LEGAL_AGENT_LLM_TEMPERATURE:-0.2}
     volumes:
-      - ../agent-runtime:/opt/agent-runtime:ro
       - shared-data:/data
     ports:
       - "28080:8080"
@@ -90,7 +88,6 @@ services:
       AGENTLEDGER_POSTGRES_DSN: postgresql://legal_agent:legal_agent@postgres:5432/legal_agent
       TEMPORAL_ADDRESS: temporal:7233
       TEMPORAL_SEARCH_ATTRIBUTES_ENABLED: ${TEMPORAL_SEARCH_ATTRIBUTES_ENABLED:-true}
-      AGENTLEDGER_SRC: /opt/agent-runtime/src
       AGENTLEDGER_BLOB_DIR: /data/agentledger/blobs
       LEGAL_AGENT_DATA_DIR: /data/legal-agent
       OTEL_EXPORTER_OTLP_ENDPOINT: http://langfuse-web:3000/api/public/otel
@@ -107,7 +104,6 @@ services:
       LEGAL_AGENT_LLM_TIMEOUT_SECONDS: ${LEGAL_AGENT_LLM_TIMEOUT_SECONDS:-60}
       LEGAL_AGENT_LLM_TEMPERATURE: ${LEGAL_AGENT_LLM_TEMPERATURE:-0.2}
     volumes:
-      - ../agent-runtime:/opt/agent-runtime:ro
       - shared-data:/data
     command: ["legal-agent", "worker"]
 
@@ -125,7 +121,6 @@ services:
       AGENTLEDGER_POSTGRES_DSN: postgresql://legal_agent:legal_agent@postgres:5432/legal_agent
       TEMPORAL_ADDRESS: temporal:7233
       TEMPORAL_SEARCH_ATTRIBUTES_ENABLED: ${TEMPORAL_SEARCH_ATTRIBUTES_ENABLED:-true}
-      AGENTLEDGER_SRC: /opt/agent-runtime/src
       AGENTLEDGER_BLOB_DIR: /data/agentledger/blobs
       LEGAL_AGENT_DATA_DIR: /data/legal-agent
       OTEL_EXPORTER_OTLP_ENDPOINT: http://langfuse-web:3000/api/public/otel
@@ -135,7 +130,6 @@ services:
       LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
       LANGFUSE_PROJECT: ${LANGFUSE_PROJECT:-legal-agent}
     volumes:
-      - ../agent-runtime:/opt/agent-runtime:ro
       - shared-data:/data
     command: ["legal-agent", "rag-worker"]
 
@@ -153,7 +147,6 @@ services:
       AGENTLEDGER_POSTGRES_DSN: postgresql://legal_agent:legal_agent@postgres:5432/legal_agent
       TEMPORAL_ADDRESS: temporal:7233
       TEMPORAL_SEARCH_ATTRIBUTES_ENABLED: ${TEMPORAL_SEARCH_ATTRIBUTES_ENABLED:-true}
-      AGENTLEDGER_SRC: /opt/agent-runtime/src
       AGENTLEDGER_BLOB_DIR: /data/agentledger/blobs
       LEGAL_AGENT_DATA_DIR: /data/legal-agent
       OTEL_EXPORTER_OTLP_ENDPOINT: http://langfuse-web:3000/api/public/otel
@@ -163,7 +156,6 @@ services:
       LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
       LANGFUSE_PROJECT: ${LANGFUSE_PROJECT:-legal-agent}
     volumes:
-      - ../agent-runtime:/opt/agent-runtime:ro
       - shared-data:/data
     command: ["legal-agent", "embedding-worker"]
 
@@ -177,10 +169,8 @@ services:
       - .env.example
     environment:
       DATABASE_DSN: postgresql://legal_agent:legal_agent@postgres:5432/legal_agent
-      AGENTLEDGER_SRC: /opt/agent-runtime/src
       LEGAL_AGENT_DATA_DIR: /data/legal-agent
     volumes:
-      - ../agent-runtime:/opt/agent-runtime:ro
       - shared-data:/data
 
   redis:

@@ -7,7 +7,6 @@ from uuid import uuid4
 
 from legal_agent.core.config import Settings
 from legal_agent.db.connection import connect
-from legal_agent.runtime.agentledger import ensure_agentledger_path
 from legal_agent.runtime.tracing import probe_langfuse
 from legal_agent.workflows.client import run_health_check_workflow, temporal_client
 from legal_agent.workflows.search_attributes import ensure_temporal_search_attributes
@@ -209,7 +208,6 @@ def _check_agentledger(settings: Settings) -> dict[str, Any]:
     schema_name = settings.agentledger_postgres_schema
     table_names = ["runs", "steps", "events", "tool_ledger", "artifacts", "approval_requests", "cost_records"]
     try:
-        ensure_agentledger_path(settings)
         import agentledger  # noqa: F401
 
         with connect(settings) as conn:

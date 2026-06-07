@@ -44,15 +44,16 @@ Agent 的 Activity 代码通过 `run_id`、`agentledger_run_id` 把两者连接�
 | Shared data volume | Larger blob artifacts such as Markdown, DOCX, JSON snapshots, uploaded material. / 大文件 artifact，例如 Markdown、DOCX、JSON 快照、上传材料。 |
 | Langfuse | Optional self-hosted tracing for LLM calls and activity spans. / 可选自托管 LLM tracing 和 activity span。 |
 
-AgentLedger upstream for this project:
+AgentLedger dependencies for this project:
 
-AgentLedger 项目地址：
+AgentLedger 依赖：
 
-<https://github.com/yaogdu/AgentLedger>
+- `agentledger-runtime[postgres]==1.3.4`
+- `agentledger-inspector==1.3.4`
 
-In local Compose, this repository expects a sibling checkout mounted as `../agent-runtime:/opt/agent-runtime:ro`, with `AGENTLEDGER_SRC=/opt/agent-runtime/src`.
+The local AgentLedger source repository may live at `/Users/duyaoguang/Documents/agents/agent-runtime`, but local Compose installs the published PyPI packages instead of mounting that source tree.
 
-本地 Compose 期望同级目录存在 AgentLedger 源码，并挂载为 `../agent-runtime:/opt/agent-runtime:ro`，容器内通过 `AGENTLEDGER_SRC=/opt/agent-runtime/src` 加载。
+本机仍可保留 AgentLedger 源码仓库 `/Users/duyaoguang/Documents/agents/agent-runtime`，但本项目本地 Compose 通过 PyPI 包安装，不再挂载源码目录。
 
 ## Workflow Ownership / Workflow 是谁定义的
 

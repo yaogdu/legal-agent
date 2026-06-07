@@ -4,8 +4,8 @@ import hashlib
 from datetime import datetime
 from pathlib import Path
 
-from fastapi import FastAPI, File, Header, HTTPException, UploadFile
-from fastapi.responses import FileResponse, PlainTextResponse
+from fastapi import FastAPI, File, Header, HTTPException, Query, UploadFile
+from fastapi.responses import FileResponse, HTMLResponse, PlainTextResponse
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -31,6 +31,10 @@ from legal_agent.db.migrate import migrate
 from legal_agent.db.repository import RunRepository
 from legal_agent.files.parser import parse_and_store_upload
 from legal_agent.llm.client import extract_labor_claims_result
+from legal_agent.runtime.agentledger import build_agentledger_inspector_html
+from legal_agent.runtime.agentledger import build_agentledger_inspector_report
+from legal_agent.runtime.agentledger import build_agentledger_inspector_run_index
+from legal_agent.runtime.agentledger import build_agentledger_inspector_run_index_html
 from legal_agent.runtime.agentledger import decide_agentledger_approval
 from legal_agent.runtime.agentledger import create_agentledger_run
 from legal_agent.runtime.agentledger import patch_agentledger_state
@@ -467,6 +471,112 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             "artifacts": _artifact_replay(audit),
             "final_state": agentledger_run.get("state_json") if isinstance(agentledger_run, dict) else {},
         }
+
+    @app.get("/api/v1/legal-agent/agentledger/runs")
+    async def list_agentledger_inspector_runs(
+        limit: int = Query(default=100, ge=1, le=1000),
+        status: str | None = Query(default=None),
+    ) -> dict[str, object]:
+        try:
+            index = build_agentledger_inspector_run_index(
+                settings,
+                limit=limit,
+                status=status,
+                run_link_template="/api/v1/legal-agent/agentledger/runs/{run_id}/inspector.html",
+            )
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=f"inspector run index failed: {type(exc).__name__}") from exc
+        return {
+            "request_id": new_id("req"),
+            "inspector": index,
+        }
+
+    @app.get("/api/v1/legal-agent/agentledger/runs.html")
+    async def list_agentledger_inspector_runs_html(
+        limit: int = Query(default=100, ge=1, le=1000),
+        status: str | None = Query(default=None),
+    ) -> HTMLResponse:
+        try:
+            html = build_agentledger_inspector_run_index_html(
+                settings,
+                limit=limit,
+                status=status,
+                run_link_template="/api/v1/legal-agent/agentledger/runs/{run_id}/inspector.html",
+            )
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=f"inspector run index failed: {type(exc).__name__}") from exc
+        return HTMLResponse(html)
+
+    @app.get("/api/v1/legal-agent/agentledger/runs/{agentledger_run_id}/inspector")
+    async def get_agentledger_inspector(agentledger_run_id: str, include_payloads: bool = Query(default=False)) -> dict[str, object]:
+        try:
+            report = build_agentledger_inspector_report(
+                settings,
+                agentledger_run_id=agentledger_run_id,
+                include_payloads=include_payloads,
+            )
+        except FileNotFoundError as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=f"inspector failed: {type(exc).__name__}") from exc
+        return {
+            "request_id": new_id("req"),
+            "agentledger_run_id": agentledger_run_id,
+            "inspector": report,
+        }
+
+    @app.get("/api/v1/legal-agent/agentledger/runs/{agentledger_run_id}/inspector.html")
+    async def get_agentledger_inspector_html(agentledger_run_id: str, include_payloads: bool = Query(default=False)) -> HTMLResponse:
+        try:
+            html = build_agentledger_inspector_html(
+                settings,
+                agentledger_run_id=agentledger_run_id,
+                include_payloads=include_payloads,
+            )
+        except FileNotFoundError as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=f"inspector failed: {type(exc).__name__}") from exc
+        return HTMLResponse(html)
+
+    @app.get("/api/v1/legal-agent/runs/{run_id}/inspector")
+    async def get_inspector(run_id: str, include_payloads: bool = Query(default=False)) -> dict[str, object]:
+        row = RunRepository(settings).get_run(run_id)
+        if row is None:
+            raise HTTPException(status_code=404, detail="run not found")
+        try:
+            report = build_agentledger_inspector_report(
+                settings,
+                agentledger_run_id=str(row["agentledger_run_id"]),
+                include_payloads=include_payloads,
+            )
+        except FileNotFoundError as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=f"inspector failed: {type(exc).__name__}") from exc
+        return {
+            "request_id": new_id("req"),
+            "run_id": run_id,
+            "agentledger_run_id": row["agentledger_run_id"],
+            "inspector": report,
+        }
+
+    @app.get("/api/v1/legal-agent/runs/{run_id}/inspector.html")
+    async def get_inspector_html(run_id: str, include_payloads: bool = Query(default=False)) -> HTMLResponse:
+        row = RunRepository(settings).get_run(run_id)
+        if row is None:
+            raise HTTPException(status_code=404, detail="run not found")
+        try:
+            html = build_agentledger_inspector_html(
+                settings,
+                agentledger_run_id=str(row["agentledger_run_id"]),
+                include_payloads=include_payloads,
+            )
+        except FileNotFoundError as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=f"inspector failed: {type(exc).__name__}") from exc
+        return HTMLResponse(html)
 
     @app.get("/api/v1/legal-agent/runs/{run_id}/result")
     async def get_result(run_id: str) -> dict[str, object]:

@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import sys
-from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
 
@@ -21,16 +19,7 @@ from legal_agent.tools.salary_calculator import (
 )
 
 
-def ensure_agentledger_path(settings: Settings) -> None:
-    if not settings.agentledger_src:
-        return
-    src = str(Path(settings.agentledger_src))
-    if src not in sys.path:
-        sys.path.insert(0, src)
-
-
 def create_runtime(settings: Settings) -> Any:
-    ensure_agentledger_path(settings)
     from agentledger import LocalBlobStore, PostgresStore, PostgresStoreConfig, Runtime
 
     settings.agentledger_blob_dir.mkdir(parents=True, exist_ok=True)
@@ -42,6 +31,91 @@ def create_runtime(settings: Settings) -> Any:
     )
     store.init()
     return Runtime(store=store, blobs=LocalBlobStore(settings.agentledger_blob_dir))
+
+
+def _inspector_redaction_policy() -> Any:
+    from agentledger_inspector import InspectorRedactionPolicy
+
+    return InspectorRedactionPolicy(
+        keys=(
+            "authorization",
+            "api_key",
+            "apikey",
+            "token",
+            "password",
+            "secret",
+            "llm_api_key",
+            "langfuse_secret_key",
+        )
+    )
+
+
+def build_agentledger_inspector_report(settings: Settings, *, agentledger_run_id: str, include_payloads: bool = False) -> dict[str, Any]:
+    from agentledger_inspector import InspectorDataSource
+
+    report = InspectorDataSource().from_postgres(
+        dsn=settings.agentledger_postgres_dsn or settings.database_dsn,
+        schema=settings.agentledger_postgres_schema,
+        blob_root=settings.agentledger_blob_dir,
+        run_id=agentledger_run_id,
+        include_payloads=include_payloads,
+        redaction_policy=_inspector_redaction_policy(),
+    )
+    return dict(report.to_dict())
+
+
+def build_agentledger_inspector_html(settings: Settings, *, agentledger_run_id: str, include_payloads: bool = False) -> str:
+    from agentledger_inspector import InspectorDataSource
+
+    report = InspectorDataSource().from_postgres(
+        dsn=settings.agentledger_postgres_dsn or settings.database_dsn,
+        schema=settings.agentledger_postgres_schema,
+        blob_root=settings.agentledger_blob_dir,
+        run_id=agentledger_run_id,
+        include_payloads=include_payloads,
+        redaction_policy=_inspector_redaction_policy(),
+    )
+    return str(report.to_html())
+
+
+def build_agentledger_inspector_run_index(
+    settings: Settings,
+    *,
+    limit: int = 100,
+    status: str | None = None,
+    run_link_template: str | None = None,
+) -> dict[str, Any]:
+    from agentledger_inspector import InspectorDataSource
+
+    index = InspectorDataSource().runs_from_postgres(
+        dsn=settings.agentledger_postgres_dsn or settings.database_dsn,
+        schema=settings.agentledger_postgres_schema,
+        blob_root=settings.agentledger_blob_dir,
+        limit=limit,
+        status=status,
+        run_link_template=run_link_template,
+    )
+    return dict(index.to_dict())
+
+
+def build_agentledger_inspector_run_index_html(
+    settings: Settings,
+    *,
+    limit: int = 100,
+    status: str | None = None,
+    run_link_template: str | None = None,
+) -> str:
+    from agentledger_inspector import InspectorDataSource
+
+    index = InspectorDataSource().runs_from_postgres(
+        dsn=settings.agentledger_postgres_dsn or settings.database_dsn,
+        schema=settings.agentledger_postgres_schema,
+        blob_root=settings.agentledger_blob_dir,
+        limit=limit,
+        status=status,
+        run_link_template=run_link_template,
+    )
+    return str(index.to_html())
 
 
 def _gateway_context(runtime: Any, *, agentledger_run_id: str, step_id: str) -> SimpleNamespace:

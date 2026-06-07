@@ -18,7 +18,6 @@ class Settings:
     api_host: str
     api_port: int
     database_dsn: str
-    agentledger_src: str | None
     agentledger_postgres_dsn: str
     agentledger_postgres_schema: str
     agentledger_blob_dir: Path
@@ -54,7 +53,6 @@ def load_settings() -> Settings:
         api_host=os.getenv("LEGAL_AGENT_API_HOST", "0.0.0.0"),
         api_port=int(os.getenv("LEGAL_AGENT_API_PORT", "8080")),
         database_dsn=os.getenv("DATABASE_DSN", "postgresql://legal_agent:legal_agent@localhost:25432/legal_agent"),
-        agentledger_src=os.getenv("AGENTLEDGER_SRC"),
         agentledger_postgres_dsn=os.getenv("AGENTLEDGER_POSTGRES_DSN", os.getenv("DATABASE_DSN", "")),
         agentledger_postgres_schema=os.getenv("AGENTLEDGER_POSTGRES_SCHEMA", "agentledger"),
         agentledger_blob_dir=Path(os.getenv("AGENTLEDGER_BLOB_DIR", ".data/agentledger/blobs")),
